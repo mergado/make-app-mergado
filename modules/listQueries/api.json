@@ -1,0 +1,18 @@
+{
+    "url": "/projects/{{parameters.projectId}}/queries/",
+    "method": "GET",
+    "qs": {
+        "limit": 100
+    },
+    "response": {
+        "iterate": "{{body.data}}",
+        "output": "{{item}}",
+        "limit": "{{parameters.limit}}"
+    },
+    "pagination": {
+        "qs": {
+            "offset": "{{(pagination.page - 1) * 100}}"
+        },
+        "condition": "{{body.offset + body.limit < body.total_results}}"
+    }
+}

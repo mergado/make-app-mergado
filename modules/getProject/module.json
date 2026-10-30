@@ -1,0 +1,5 @@
+{
+    "label": "Get a Project",
+    "description": "Returns information about a specific project by its ID, including the URL of its output feed.",
+    "typeId": 4
+}

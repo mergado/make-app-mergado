@@ -1,0 +1,57 @@
+[
+    {
+        "name": "shopId",
+        "type": "select",
+        "label": "E-shop",
+        "required": true,
+        "options": {
+            "store": "rpc://listShops",
+            "nested": [
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "options": "rpc://listProjects",
+                    "help": "Project (output feed) of the selected e-shop; the output channel is in brackets. To enter a project ID instead, switch on Map."
+                }
+            ]
+        },
+        "help": "Mergado e-shop. The list shows the e-shops your Mergado account has access to."
+    },
+    {
+        "name": "mql",
+        "type": "text",
+        "label": "MQL query",
+        "help": "Condition in Mergado Query Language, for example `PRICE_VAT < 100`. It is evaluated on the input values of the products. Element names are case-sensitive. Leave empty to return all products."
+    },
+    {
+        "name": "isHidden",
+        "type": "select",
+        "label": "Visibility",
+        "help": "Leave empty to return both visible and hidden products.",
+        "options": [
+            {
+                "label": "Only visible products",
+                "value": "false"
+            },
+            {
+                "label": "Only hidden products",
+                "value": "true"
+            }
+        ]
+    },
+    {
+        "name": "valuesToExtract",
+        "type": "text",
+        "label": "Values to extract",
+        "help": "Comma-separated element paths or variable names, for example `ITEM_ID,PRICE_VAT,PARAM | PARAM_NAME`. The response then contains only these values in Extracted values instead of all product data."
+    },
+    {
+        "name": "limit",
+        "type": "uinteger",
+        "label": "Limit",
+        "default": 10,
+        "help": "Maximum number of products Make will return during one execution cycle."
+    }
+]

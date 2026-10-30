@@ -1,0 +1,17 @@
+[
+    {
+        "name": "shopId",
+        "type": "select",
+        "label": "E-shop",
+        "required": true,
+        "options": "rpc://listShops",
+        "help": "Mergado e-shop. The list shows the e-shops your Mergado account has access to."
+    },
+    {
+        "name": "limit",
+        "type": "uinteger",
+        "label": "Limit",
+        "default": 10,
+        "help": "Maximum number of projects Make will return during one execution cycle."
+    }
+]

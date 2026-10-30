@@ -1,0 +1,36 @@
+[
+    {
+        "name": "shopId",
+        "type": "select",
+        "label": "E-shop",
+        "required": true,
+        "options": {
+            "store": "rpc://listShops",
+            "nested": [
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "options": "rpc://listProjects",
+                    "help": "Project (output feed) of the selected e-shop; the output channel is in brackets. To enter a project ID instead, switch on Map."
+                }
+            ]
+        },
+        "help": "Mergado e-shop. The list shows the e-shops your Mergado account has access to."
+    },
+    {
+        "name": "name",
+        "type": "text",
+        "label": "Name",
+        "required": true,
+        "help": "Name of the query as it will appear in Mergado."
+    },
+    {
+        "name": "query",
+        "type": "text",
+        "label": "MQL query",
+        "required": true,
+        "help": "Selection in Mergado Query Language, for example `PRICE_VAT < 200`. Element names are case-sensitive."
+    }
+]

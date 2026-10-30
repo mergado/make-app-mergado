@@ -1,0 +1,36 @@
+{
+    "url": "/projects/{{parameters.projectId}}/",
+    "method": "GET",
+    "response": {
+        "output": {
+            "id": "{{body.id}}",
+            "shop_id": "{{body.shop_id}}",
+            "creator_id": "{{body.creator_id}}",
+            "name": "{{body.name}}",
+            "url": "{{body.url}}",
+            "created": "{{body.created}}",
+            "exported_items": "{{body.exported_items}}",
+            "input_format": "{{body.input_format}}",
+            "output_format": "{{body.output_format}}",
+            "pairing_elements": "{{body.pairing_elements}}",
+            "readonly": "{{body.readonly}}",
+            "is_paused": "{{body.is_paused}}",
+            "rules_changed_at": "{{body.rules_changed_at}}",
+            "slug": "{{body.slug}}",
+            "turned_off": "{{body.turned_off}}",
+            "update_period": "{{body.update_period}}",
+            "last_access": "{{body.last_access}}",
+            "data_synced_at": "{{body.data_synced_at}}",
+            "data_updated_at": "{{body.data_updated_at}}",
+            "is_dirty": "{{body.is_dirty}}",
+            "in_testing_mode": "{{body.in_testing_mode}}",
+            "autohide_new_products": "{{body.autohide_new_products}}",
+            "encoding": "{{body.encoding}}",
+            "metadata": "{{body.metadata}}",
+            "number_of_elements": "{{body.number_of_elements}}",
+            "all_products_query_id": "{{body.all_products_query_id}}",
+            "sync_schedule": "{{body.sync_schedule}}",
+            "output_feed_url": "https://feeds.mergado.com/{{body.slug}}.xml"
+        }
+    }
+}

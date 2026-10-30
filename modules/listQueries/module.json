@@ -1,0 +1,5 @@
+{
+    "label": "List Queries",
+    "description": "Returns a list of queries (saved product selections) in a specific project.",
+    "typeId": 9
+}

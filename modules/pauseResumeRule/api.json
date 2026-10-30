@@ -1,0 +1,11 @@
+{
+    "url": "/rules/{{parameters.ruleId}}/",
+    "method": "PATCH",
+    "type": "json",
+    "body": {
+        "applies": "{{parameters.applies}}"
+    },
+    "response": {
+        "output": "{{body}}"
+    }
+}

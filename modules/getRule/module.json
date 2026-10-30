@@ -1,0 +1,5 @@
+{
+    "label": "Get a Rule",
+    "description": "Returns information about a specific rule by its ID.",
+    "typeId": 4
+}

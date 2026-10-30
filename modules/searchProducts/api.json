@@ -1,0 +1,24 @@
+{
+    "url": "/projects/{{parameters.projectId}}/products",
+    "method": "POST",
+    "qs": {
+        "limit": 100,
+        "is_hidden": "{{ifempty(parameters.isHidden, undefined)}}",
+        "values_to_extract": "{{if(parameters.valuesToExtract, '[\"' + join(split(replace(parameters.valuesToExtract, '/\\s*,\\s*/g', ','), ','), '\",\"') + '\"]', undefined)}}"
+    },
+    "type": "json",
+    "body": {
+        "mql": "{{ifempty(parameters.mql, undefined)}}"
+    },
+    "response": {
+        "iterate": "{{body.data}}",
+        "output": "{{item}}",
+        "limit": "{{parameters.limit}}"
+    },
+    "pagination": {
+        "qs": {
+            "offset": "{{(pagination.page - 1) * 100}}"
+        },
+        "condition": "{{body.offset + body.limit < body.total_results}}"
+    }
+}

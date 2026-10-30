@@ -1,0 +1,12 @@
+[
+    {
+        "name": "elements",
+        "label": "Elements",
+        "type": "collection"
+    },
+    {
+        "name": "attributes",
+        "label": "Attributes",
+        "type": "collection"
+    }
+]

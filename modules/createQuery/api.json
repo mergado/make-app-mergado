@@ -1,0 +1,12 @@
+{
+    "url": "/projects/{{parameters.projectId}}/queries/",
+    "method": "POST",
+    "type": "json",
+    "body": {
+        "name": "{{parameters.name}}",
+        "query": "{{parameters.query}}"
+    },
+    "response": {
+        "output": "{{body}}"
+    }
+}

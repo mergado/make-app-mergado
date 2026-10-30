@@ -1,0 +1,97 @@
+[
+    {
+        "name": "duration",
+        "label": "Duration",
+        "type": "number"
+    },
+    {
+        "name": "errors",
+        "label": "Errors",
+        "type": "array",
+        "spec": {
+            "type": "collection",
+            "spec": [
+                {
+                    "name": "message",
+                    "label": "Message",
+                    "type": "text"
+                },
+                {
+                    "name": "type",
+                    "label": "Type",
+                    "type": "text"
+                }
+            ]
+        }
+    },
+    {
+        "name": "finished_at",
+        "label": "Finished at",
+        "type": "date"
+    },
+    {
+        "name": "id",
+        "label": "ID",
+        "type": "text"
+    },
+    {
+        "name": "items",
+        "label": "Items",
+        "type": "number"
+    },
+    {
+        "name": "items_created",
+        "label": "Items created",
+        "type": "number"
+    },
+    {
+        "name": "items_processed",
+        "label": "Items processed",
+        "type": "number"
+    },
+    {
+        "name": "items_removed",
+        "label": "Items removed",
+        "type": "number"
+    },
+    {
+        "name": "items_updated",
+        "label": "Items updated",
+        "type": "number"
+    },
+    {
+        "name": "started_at",
+        "label": "Started at",
+        "type": "date"
+    },
+    {
+        "name": "status",
+        "label": "Status",
+        "type": "text"
+    },
+    {
+        "name": "user_id",
+        "label": "User ID",
+        "type": "text"
+    },
+    {
+        "name": "warnings",
+        "label": "Warnings",
+        "type": "array",
+        "spec": {
+            "type": "collection",
+            "spec": [
+                {
+                    "name": "message",
+                    "label": "Message",
+                    "type": "text"
+                },
+                {
+                    "name": "type",
+                    "label": "Type",
+                    "type": "text"
+                }
+            ]
+        }
+    }
+]

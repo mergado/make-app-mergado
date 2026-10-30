@@ -1,0 +1,14 @@
+{
+    "user.read": "Read your user profile",
+    "user.shops.read": "List your e-shops",
+    "shop.read": "Read e-shop details",
+    "shop.projects.read": "List e-shop projects",
+    "project.read": "Read project details",
+    "project.elements.read": "Read project elements",
+    "project.products.read": "Read and search products",
+    "project.queries.read": "Read queries",
+    "project.queries.write": "Create and edit queries",
+    "project.rules.read": "Read rules",
+    "project.rules.write": "Enable, disable and edit rules",
+    "project.logs.read": "Read project logs"
+}

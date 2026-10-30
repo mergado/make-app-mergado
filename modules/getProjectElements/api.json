@@ -1,0 +1,7 @@
+{
+    "url": "/projects/{{parameters.projectId}}/elements/",
+    "method": "GET",
+    "response": {
+        "output": "{{body}}"
+    }
+}

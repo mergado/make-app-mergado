@@ -1,0 +1,95 @@
+[
+    {
+        "name": "duration",
+        "label": "Duration",
+        "type": "number"
+    },
+    {
+        "name": "errors",
+        "label": "Errors",
+        "type": "array",
+        "spec": {
+            "type": "collection",
+            "spec": [
+                {
+                    "name": "message",
+                    "label": "Message",
+                    "type": "text"
+                },
+                {
+                    "name": "type",
+                    "label": "Type",
+                    "type": "text"
+                }
+            ]
+        }
+    },
+    {
+        "name": "finished_at",
+        "label": "Finished at",
+        "type": "date"
+    },
+    {
+        "name": "id",
+        "label": "ID",
+        "type": "text"
+    },
+    {
+        "name": "initial",
+        "label": "Initial",
+        "type": "boolean"
+    },
+    {
+        "name": "items",
+        "label": "Items",
+        "type": "number"
+    },
+    {
+        "name": "processed_items",
+        "label": "Processed items",
+        "type": "number"
+    },
+    {
+        "name": "started_at",
+        "label": "Started at",
+        "type": "date"
+    },
+    {
+        "name": "status",
+        "label": "Status",
+        "type": "text"
+    },
+    {
+        "name": "user_id",
+        "label": "User ID",
+        "type": "text"
+    },
+    {
+        "name": "warnings",
+        "label": "Warnings",
+        "type": "array",
+        "spec": {
+            "type": "collection",
+            "spec": [
+                {
+                    "name": "data",
+                    "label": "Data",
+                    "type": "text"
+                },
+                {
+                    "name": "product_ids",
+                    "label": "Product ids",
+                    "type": "array",
+                    "spec": {
+                        "type": "number"
+                    }
+                },
+                {
+                    "name": "type",
+                    "label": "Type",
+                    "type": "text"
+                }
+            ]
+        }
+    }
+]

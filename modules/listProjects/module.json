@@ -1,0 +1,5 @@
+{
+    "label": "List Projects",
+    "description": "Returns a list of projects (output feeds) in a specific e-shop.",
+    "typeId": 9
+}

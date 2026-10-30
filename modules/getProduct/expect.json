@@ -1,0 +1,9 @@
+[
+    {
+        "name": "productId",
+        "type": "text",
+        "label": "Product ID",
+        "required": true,
+        "help": "Mergado product ID, returned for example by Search Products."
+    }
+]

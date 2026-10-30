@@ -1,0 +1,74 @@
+[
+    {
+        "name": "data",
+        "label": "Data",
+        "type": "collection",
+        "spec": [
+            {
+                "name": "attributes",
+                "label": "Attributes",
+                "type": "collection"
+            },
+            {
+                "name": "elements",
+                "label": "Elements",
+                "type": "collection"
+            }
+        ]
+    },
+    {
+        "name": "is_hidden",
+        "label": "Is hidden",
+        "type": "boolean"
+    },
+    {
+        "name": "is_hidden_by_rule",
+        "label": "Is hidden by rule",
+        "type": "boolean"
+    },
+    {
+        "name": "is_hidden_manually",
+        "label": "Is hidden manually",
+        "type": "boolean"
+    },
+    {
+        "name": "manual_changes",
+        "label": "Manual changes",
+        "type": "array",
+        "spec": {
+            "type": "collection",
+            "spec": [
+                {
+                    "name": "element_path",
+                    "label": "Element path",
+                    "type": "text"
+                },
+                {
+                    "name": "is_applied",
+                    "label": "Is applied",
+                    "type": "boolean"
+                },
+                {
+                    "name": "value",
+                    "label": "Value",
+                    "type": "text"
+                }
+            ]
+        }
+    },
+    {
+        "name": "id",
+        "label": "ID",
+        "type": "text"
+    },
+    {
+        "name": "output_changed_at",
+        "label": "Output changed at",
+        "type": "date"
+    },
+    {
+        "name": "updated_at",
+        "label": "Updated at",
+        "type": "date"
+    }
+]

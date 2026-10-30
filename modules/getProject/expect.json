@@ -1,0 +1,22 @@
+[
+    {
+        "name": "shopId",
+        "type": "select",
+        "label": "E-shop",
+        "required": true,
+        "options": {
+            "store": "rpc://listShops",
+            "nested": [
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "options": "rpc://listProjects",
+                    "help": "Project (output feed) of the selected e-shop; the output channel is in brackets. To enter a project ID instead, switch on Map."
+                }
+            ]
+        },
+        "help": "Mergado e-shop. The list shows the e-shops your Mergado account has access to."
+    }
+]

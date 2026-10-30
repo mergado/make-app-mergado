@@ -1,0 +1,9 @@
+{
+    "connection": "mergado-wp1zb2",
+    "mergadoClient": {
+        "client_id": "dcr_0wtd0y5jdkt08zsx01zfebw2jcymqgbb3zdn",
+        "registered": "2026-10-30",
+        "via": "DCR /oauth2/register/",
+        "token_endpoint_auth_method": "none"
+    }
+}

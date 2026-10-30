@@ -1,0 +1,5 @@
+{
+    "label": "List Rules",
+    "description": "Returns a list of rules in a specific project, ordered by priority.",
+    "typeId": 9
+}

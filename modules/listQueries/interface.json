@@ -1,0 +1,47 @@
+[
+    {
+        "name": "advanced_interface",
+        "label": "Advanced interface",
+        "type": "boolean"
+    },
+    {
+        "name": "created_at",
+        "label": "Created at",
+        "type": "date"
+    },
+    {
+        "name": "id",
+        "label": "ID",
+        "type": "text"
+    },
+    {
+        "name": "name",
+        "label": "Name",
+        "type": "text"
+    },
+    {
+        "name": "product_count",
+        "label": "Product count",
+        "type": "number"
+    },
+    {
+        "name": "project_id",
+        "label": "Project ID",
+        "type": "text"
+    },
+    {
+        "name": "query",
+        "label": "Query",
+        "type": "text"
+    },
+    {
+        "name": "read_only",
+        "label": "Read only",
+        "type": "boolean"
+    },
+    {
+        "name": "search_output",
+        "label": "Search output",
+        "type": "boolean"
+    }
+]
