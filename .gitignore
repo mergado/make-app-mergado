@@ -1,0 +1,4 @@
+.env
+.pull/
+desktop.ini
+node_modules/
