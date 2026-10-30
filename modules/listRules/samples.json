@@ -1,1 +1,16 @@
-{}
+{
+    "applies": true,
+    "data": null,
+    "element_path": "DESCRIPTION",
+    "id": "1",
+    "is_deletable": true,
+    "is_editable": true,
+    "is_movable": true,
+    "is_pausable": true,
+    "name": null,
+    "note": null,
+    "priority": "0",
+    "project_id": "1",
+    "queries": {},
+    "type": "format_converter"
+}

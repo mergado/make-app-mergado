@@ -1,5 +1,5 @@
 {
-    "label": "Pause or Resume a Rule",
+    "label": "Pause or resume a rule",
     "description": "Pauses or resumes a specific rule. The change shows in the output feed after the next feed update.",
     "typeId": 4
 }

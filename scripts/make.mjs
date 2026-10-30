@@ -101,7 +101,7 @@ async function deploy() {
     }
 
     const base = readJson('base.json');
-    // Dokumentace uvádí pro nastavení base POST, VS Code rozšíření PUT – zkusíme oba.
+    // The docs name POST for setting the base, the VS Code extension uses PUT – try both.
     let r = await call('PUT', `/sdk/apps/${APP}/${VER}/base`, base);
     if (r.status === 404 || r.status === 405) r = await call('POST', `/sdk/apps/${APP}/${VER}/base`, base);
     console.log(`base -> ${r.status}`);
@@ -138,6 +138,9 @@ async function deploy() {
             await must('PUT', `/sdk/apps/${APP}/${VER}/modules/${name}/${section}`, readJson(`modules/${name}/${section}.json`));
         }
     }
+
+    // Groups last – they may only list modules that already exist.
+    if (existsSync(join(ROOT, 'groups.json'))) await must('PUT', `/sdk/apps/${APP}/${VER}/groups`, readJson('groups.json'));
 }
 
 const MODULE_SECTIONS = ['api', 'parameters', 'expect', 'interface', 'samples'];

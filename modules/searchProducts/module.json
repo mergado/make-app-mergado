@@ -1,5 +1,5 @@
 {
-    "label": "Search Products",
+    "label": "Search products",
     "description": "Returns a list of products in a specific project filtered by an MQL query.",
     "typeId": 9
 }

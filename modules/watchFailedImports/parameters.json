@@ -25,6 +25,6 @@
         "label": "Limit",
         "default": 2,
         "required": true,
-        "help": "Maximum number of imports Make will return during one execution cycle."
+        "help": "Maximum number of failed imports Make will return during one execution cycle."
     }
 ]

@@ -3,7 +3,7 @@
         "ucel": "Zdroj pravdy pro funkce Mergada v Make appce (make-app-mergado/) a v n8n nodu (n8n-nodes-mergado/). Obsah je stejný, tvar (názvy, typy modulů) podle platformy. Make moduly se z tohoto souboru generují: node make-app-mergado/scripts/generate.mjs.",
         "api": "Základ API: baseUrl, hlavička s verzí (bez ní API odpovídá ve formátu z roku 2020) a kopie OpenAPI spec, ze které se berou výstupní pole.",
         "slovnik": "Jednotné pojmy pro popisky a nápovědu na obou platformách.",
-        "vybery": "Rozbalovací seznamy (Make RPC, n8n listSearch): endpoint, label a value, na čem závisí (dependsOn), filtr položek, help (nápověda pole, které výběr používá) a limit (max. počet položek ve výběru).",
+        "vybery": "Rozbalovací seznamy (Make RPC, n8n listSearch): endpoint, label a value, na čem závisí (dependsOn), filtr položek, help (nápověda pole, které výběr používá) a limit (max. počet položek ve výběru). helpEdit = nápověda pro moduly, kde pole začíná v režimu mapování ID (Make: Get a Pause/resume, label pak končí „ID“).",
         "funkce[].id": "Stabilní ID funkce: <resource>.<operation>.",
         "funkce[].resource / operation": "Neutrální pojmenování (n8n styl). operation: get, getAll, search, create, getCurrent, pauseResume, watch, call.",
         "funkce[].method / endpoint": "HTTP metoda a cesta. {param} odkazuje na vstup se stejným jménem. Výjimka: {userId} není vstup, je to ID přihlášeného uživatele.",
@@ -12,12 +12,13 @@
         "funkce[].request": "Co se posílá: qs a body. Hodnota '$name' = vstup (prázdný nepovinný vstup se vynechá), '$name|csvJsonArray' = text oddělený čárkami převedený na JSON pole řetězců (values_to_extract=[\"A\",\"B\"]). Ostatní hodnoty jsou konstanty.",
         "funkce[].pagination": "null, nebo { type: 'limit-offset', pageSize, total } – total je pole s celkovým počtem v odpovědi. Uživatel zadává jen Limit (Make) / Return All + Limit (n8n).",
         "funkce[].iterate": "Kde je v odpovědi seznam položek (např. 'data'); chybí = odpověď je jedna položka.",
-        "funkce[].output": "schema = odkud v OpenAPI vzít výstupní pole (path, method, item = true když jde o položku seznamu data[]); keyFields = klíčová pole pro help a ukázky; computed = pole, která API nevrací a dopočítáváme je ({pole} = hodnota z položky).",
+        "funkce[].output": "schema = odkud v OpenAPI vzít výstupní pole (path, method, item = true když jde o položku seznamu data[]); keyFields = klíčová pole pro help a ukázky; computed = pole, která API nevrací a dopočítáváme je ({pole} = hodnota z položky). extra = pole, která API vrací, ale OpenAPI je nepopisuje (name, type).",
         "funkce[].trigger": "Jen pro watch: log, statuses (filtr status in […]), orderBy, dateField. Make: polling trigger s epoch, n8n: MergadoTrigger s event.",
-        "funkce[].make": "Make: name (ID modulu), label, description, type (search | action | trigger | universal).",
+        "funkce[].make": "Make: name (ID modulu, po publikaci nejde změnit), label (sentence case podle konvencí Make), description, type (search | action | trigger | universal), group (skupina modulů v Make, pořadí skupin v makeGroups).",
         "funkce[].n8n": "n8n: resource, operation a name operace v n8n-nodes-mergado (u triggeru node MergadoTrigger a event). Pole, pokud funkci v n8n pokrývá víc operací; null = v n8n zatím není.",
         "funkce[].scenar": "Ukázkový scénář použití (pro help a žádost o review).",
-        "app": "Název a krátký popis aplikace (Make: app description, n8n: description v Mergado.node.json)."
+        "app": "Název a krátký popis aplikace (Make: app description, n8n: description v Mergado.node.json).",
+        "makeGroups": "Pořadí skupin modulů v Make: triggery první, pak skupiny podle entity, nakonec Other (Make an API call)."
     },
     "api": {
         "baseUrl": "https://api.mergado.com",
@@ -43,7 +44,8 @@
             "value": "id",
             "pozn": "{userId} = ID přihlášeného uživatele (z GET /me/ nebo user_id z odpovědi na token). Hodnota me nefunguje – /users/me/shops/ vrací 404 (ověřeno v Make 30. 10.).",
             "help": "Mergado e-shop. The list shows the e-shops your Mergado account has access to.",
-            "limit": 300
+            "limit": 300,
+            "helpEdit": "ID of the Mergado e-shop. Switch off **Map** to choose the e-shop from a list."
         },
         "project": {
             "endpoint": "/shops/{shopId}/projects/",
@@ -51,7 +53,8 @@
             "label": "{name} ({output_format})",
             "value": "id",
             "help": "Project (output feed) of the selected e-shop; the output channel is in brackets. To enter a project ID instead, switch on Map.",
-            "limit": 300
+            "limit": 300,
+            "helpEdit": "ID of the project (output feed). Switch off **Map** to choose from the projects of the selected e-shop."
         },
         "rule": {
             "endpoint": "/projects/{projectId}/rules/",
@@ -59,7 +62,8 @@
             "label": "{name|element_path|id} ({type}, active|paused)",
             "value": "id",
             "help": "Rule of the selected project. To enter a rule ID instead, switch on Map.",
-            "limit": 300
+            "limit": 300,
+            "helpEdit": "ID of the rule. Switch off **Map** to choose from the rules of the selected project."
         },
         "pausableRule": {
             "endpoint": "/projects/{projectId}/rules/",
@@ -69,7 +73,8 @@
             "filter": "is_pausable = true",
             "pozn": "Skryje pravidla, která pozastavit nejde (převod formátu, pravidla rozšíření Bidding Fox, Pricing Fox, Feed Image Editor).",
             "help": "Rule of the selected project. Only rules that can be paused are listed, so format conversion rules and rules of paid extensions (Bidding Fox, Pricing Fox, Feed Image Editor) are left out. To enter a rule ID instead, switch on Map.",
-            "limit": 300
+            "limit": 300,
+            "helpEdit": "ID of the rule. Switch off **Map** to choose from the rules of the selected project that can be paused."
         }
     },
     "funkce": [
@@ -97,9 +102,10 @@
             },
             "make": {
                 "name": "getCurrentUser",
-                "label": "Get Current User",
+                "label": "Get current user",
                 "description": "Returns information about the Mergado user the connection belongs to.",
-                "type": "action"
+                "type": "action",
+                "group": "Other"
             },
             "n8n": {
                 "resource": "user",
@@ -133,13 +139,28 @@
                     "name",
                     "exported_items"
                 ],
-                "pozn": "Pole web seznam e-shopů nevrací (živé API s verzí 2026-10-30, ověřeno z n8n 30. 10.), i když je v příkladu OpenAPI."
+                "pozn": "Pole web seznam e-shopů nevrací (živé API s verzí 2026-10-30, ověřeno z n8n 30. 10.), i když je v příkladu OpenAPI.",
+                "extra": [
+                    {
+                        "name": "paid_tariff_id",
+                        "type": "text"
+                    },
+                    {
+                        "name": "tariff_exceeded_reported",
+                        "type": "date"
+                    },
+                    {
+                        "name": "deleted_at",
+                        "type": "date"
+                    }
+                ]
             },
             "make": {
                 "name": "listShops",
-                "label": "List E-shops",
+                "label": "List e-shops",
                 "description": "Returns a list of e-shops you have access to.",
-                "type": "search"
+                "type": "search",
+                "group": "E-shops and projects"
             },
             "n8n": {
                 "resource": "shop",
@@ -192,9 +213,10 @@
             },
             "make": {
                 "name": "listProjects",
-                "label": "List Projects",
+                "label": "List projects",
                 "description": "Returns a list of projects (output feeds) in a specific e-shop.",
-                "type": "search"
+                "type": "search",
+                "group": "E-shops and projects"
             },
             "n8n": {
                 "resource": "project",
@@ -248,9 +270,10 @@
             },
             "make": {
                 "name": "getProject",
-                "label": "Get a Project",
+                "label": "Get a project",
                 "description": "Returns information about a specific project by its ID, including the URL of its output feed.",
-                "type": "action"
+                "type": "action",
+                "group": "E-shops and projects"
             },
             "n8n": {
                 "resource": "project",
@@ -296,9 +319,10 @@
             },
             "make": {
                 "name": "getProjectElements",
-                "label": "Get Project Elements",
+                "label": "Get project elements",
                 "description": "Returns the element tree of a specific project. Use the element names in MQL queries and rules.",
-                "type": "action"
+                "type": "action",
+                "group": "E-shops and projects"
             },
             "n8n": {
                 "resource": "element",
@@ -392,9 +416,10 @@
             },
             "make": {
                 "name": "searchProducts",
-                "label": "Search Products",
+                "label": "Search products",
                 "description": "Returns a list of products in a specific project filtered by an MQL query.",
-                "type": "search"
+                "type": "search",
+                "group": "Products"
             },
             "n8n": {
                 "resource": "product",
@@ -435,9 +460,10 @@
             },
             "make": {
                 "name": "getProduct",
-                "label": "Get a Product",
+                "label": "Get a product",
                 "description": "Returns information about a specific product by its ID.",
-                "type": "action"
+                "type": "action",
+                "group": "Products"
             },
             "n8n": {
                 "resource": "product",
@@ -490,9 +516,10 @@
             },
             "make": {
                 "name": "listQueries",
-                "label": "List Queries",
+                "label": "List queries",
                 "description": "Returns a list of queries (saved product selections) in a specific project.",
-                "type": "search"
+                "type": "search",
+                "group": "Queries"
             },
             "n8n": {
                 "resource": "query",
@@ -559,9 +586,10 @@
             },
             "make": {
                 "name": "createQuery",
-                "label": "Create a Query",
+                "label": "Create a query",
                 "description": "Creates a new query (saved product selection) in a specific project.",
-                "type": "action"
+                "type": "action",
+                "group": "Queries"
             },
             "n8n": {
                 "resource": "query",
@@ -616,9 +644,10 @@
             },
             "make": {
                 "name": "listRules",
-                "label": "List Rules",
+                "label": "List rules",
                 "description": "Returns a list of rules in a specific project, ordered by priority.",
-                "type": "search"
+                "type": "search",
+                "group": "Rules"
             },
             "n8n": {
                 "resource": "rule",
@@ -675,9 +704,10 @@
             },
             "make": {
                 "name": "getRule",
-                "label": "Get a Rule",
+                "label": "Get a rule",
                 "description": "Returns information about a specific rule by its ID.",
-                "type": "action"
+                "type": "action",
+                "group": "Rules"
             },
             "n8n": {
                 "resource": "rule",
@@ -753,9 +783,10 @@
             },
             "make": {
                 "name": "pauseResumeRule",
-                "label": "Pause or Resume a Rule",
+                "label": "Pause or resume a rule",
                 "description": "Pauses or resumes a specific rule. The change shows in the output feed after the next feed update.",
-                "type": "action"
+                "type": "action",
+                "group": "Rules"
             },
             "n8n": [
                 {
@@ -821,13 +852,20 @@
                     "finished_at",
                     "items",
                     "warnings"
+                ],
+                "extra": [
+                    {
+                        "name": "exported_product_group_count",
+                        "type": "number"
+                    }
                 ]
             },
             "make": {
                 "name": "watchFeedExports",
-                "label": "Watch Feed Exports",
+                "label": "Watch feed exports",
                 "description": "Triggers when an output feed of a specific project is exported (successfully or with warnings).",
-                "type": "trigger"
+                "type": "trigger",
+                "group": "Triggers"
             },
             "n8n": {
                 "node": "MergadoTrigger",
@@ -888,9 +926,10 @@
             },
             "make": {
                 "name": "watchFailedImports",
-                "label": "Watch Failed Imports",
+                "label": "Watch failed imports",
                 "description": "Triggers when an import of the input feed of a specific project fails.",
-                "type": "trigger"
+                "type": "trigger",
+                "group": "Triggers"
             },
             "n8n": {
                 "node": "MergadoTrigger",
@@ -910,9 +949,10 @@
             "pagination": null,
             "make": {
                 "name": "makeApiCall",
-                "label": "Make an API Call",
+                "label": "Make an API call",
                 "description": "Performs an arbitrary authorized API call.",
-                "type": "universal"
+                "type": "universal",
+                "group": "Other"
             },
             "n8n": null,
             "pozn": "Make modul se negeneruje (ručně v make-app-mergado/modules/makeApiCall). V n8n odpovídá HTTP Request node s credentialem Mergado.",
@@ -922,5 +962,13 @@
     "app": {
         "label": "Mergado",
         "description": "Manage product feeds in Mergado: list e-shops and projects, search products with MQL, create queries, pause or resume rules, and react to feed exports and failed imports."
-    }
+    },
+    "makeGroups": [
+        "Triggers",
+        "E-shops and projects",
+        "Products",
+        "Queries",
+        "Rules",
+        "Other"
+    ]
 }
