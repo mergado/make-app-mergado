@@ -1,0 +1,18 @@
+{
+    "baseUrl": "https://api.mergado.com",
+    "headers": {
+        "authorization": "Bearer {{connection.accessToken}}",
+        "accept": "application/json",
+        "use-mergado-api-version": "2026-10-30"
+    },
+    "response": {
+        "error": {
+            "message": "[{{statusCode}}] {{ifempty(body.message, ifempty(body.detail, ifempty(body.error, 'Mergado API returned an error.')))}}"
+        }
+    },
+    "log": {
+        "sanitize": [
+            "request.headers.authorization"
+        ]
+    }
+}

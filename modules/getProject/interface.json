@@ -1,0 +1,189 @@
+[
+    {
+        "name": "id",
+        "label": "ID",
+        "type": "text"
+    },
+    {
+        "name": "shop_id",
+        "label": "Shop ID",
+        "type": "text"
+    },
+    {
+        "name": "creator_id",
+        "label": "Creator ID",
+        "type": "text"
+    },
+    {
+        "name": "name",
+        "label": "Name",
+        "type": "text"
+    },
+    {
+        "name": "url",
+        "label": "URL",
+        "type": "text"
+    },
+    {
+        "name": "created",
+        "label": "Created",
+        "type": "date"
+    },
+    {
+        "name": "exported_items",
+        "label": "Exported items",
+        "type": "number"
+    },
+    {
+        "name": "input_format",
+        "label": "Input format",
+        "type": "text"
+    },
+    {
+        "name": "output_format",
+        "label": "Output format",
+        "type": "text"
+    },
+    {
+        "name": "pairing_elements",
+        "label": "Pairing elements",
+        "type": "array",
+        "spec": {
+            "type": "text"
+        }
+    },
+    {
+        "name": "readonly",
+        "label": "Readonly",
+        "type": "boolean"
+    },
+    {
+        "name": "is_paused",
+        "label": "Is paused",
+        "type": "boolean"
+    },
+    {
+        "name": "rules_changed_at",
+        "label": "Rules changed at",
+        "type": "date"
+    },
+    {
+        "name": "slug",
+        "label": "Slug",
+        "type": "text"
+    },
+    {
+        "name": "turned_off",
+        "label": "Turned off",
+        "type": "boolean"
+    },
+    {
+        "name": "update_period",
+        "label": "Update period",
+        "type": "number"
+    },
+    {
+        "name": "last_access",
+        "label": "Last access",
+        "type": "date"
+    },
+    {
+        "name": "data_synced_at",
+        "label": "Data synced at",
+        "type": "date"
+    },
+    {
+        "name": "data_updated_at",
+        "label": "Data updated at",
+        "type": "date"
+    },
+    {
+        "name": "is_dirty",
+        "label": "Is dirty",
+        "type": "boolean"
+    },
+    {
+        "name": "in_testing_mode",
+        "label": "In testing mode",
+        "type": "boolean"
+    },
+    {
+        "name": "autohide_new_products",
+        "label": "Autohide new products",
+        "type": "boolean"
+    },
+    {
+        "name": "encoding",
+        "label": "Encoding",
+        "type": "text"
+    },
+    {
+        "name": "metadata",
+        "label": "Metadata",
+        "type": "collection",
+        "spec": [
+            {
+                "name": "stats_ga_medium",
+                "label": "Stats ga medium",
+                "type": "text"
+            },
+            {
+                "name": "stats_ga_source",
+                "label": "Stats ga source",
+                "type": "text"
+            },
+            {
+                "name": "generator",
+                "label": "Generator",
+                "type": "text"
+            }
+        ]
+    },
+    {
+        "name": "number_of_elements",
+        "label": "Number of elements",
+        "type": "number"
+    },
+    {
+        "name": "all_products_query_id",
+        "label": "All products query ID",
+        "type": "text"
+    },
+    {
+        "name": "sync_schedule",
+        "label": "Sync schedule",
+        "type": "collection",
+        "spec": [
+            {
+                "name": "minute",
+                "label": "Minute",
+                "type": "text"
+            },
+            {
+                "name": "hour",
+                "label": "Hour",
+                "type": "text"
+            },
+            {
+                "name": "day_of_week",
+                "label": "Day of week",
+                "type": "text"
+            },
+            {
+                "name": "day_of_month",
+                "label": "Day of month",
+                "type": "text"
+            },
+            {
+                "name": "month_of_year",
+                "label": "Month of year",
+                "type": "text"
+            }
+        ]
+    },
+    {
+        "name": "output_feed_url",
+        "label": "Output feed URL",
+        "type": "url"
+    }
+]

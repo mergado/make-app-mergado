@@ -1,0 +1,5 @@
+{
+    "label": "Create a Query",
+    "description": "Creates a new query (saved product selection) in a specific project.",
+    "typeId": 4
+}

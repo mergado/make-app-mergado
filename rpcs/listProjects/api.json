@@ -1,0 +1,21 @@
+{
+    "url": "/shops/{{parameters.shopId}}/projects/",
+    "method": "GET",
+    "response": {
+        "iterate": "{{body.data}}",
+        "output": {
+            "label": "{{item.name}} ({{item.output_format}})",
+            "value": "{{item.id}}"
+        },
+        "limit": 300
+    },
+    "qs": {
+        "limit": 100
+    },
+    "pagination": {
+        "qs": {
+            "offset": "{{(pagination.page - 1) * 100}}"
+        },
+        "condition": "{{body.offset + body.limit < body.total_results}}"
+    }
+}

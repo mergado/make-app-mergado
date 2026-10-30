@@ -1,0 +1,9 @@
+{
+    "response": {
+        "limit": 300,
+        "output": {
+            "label": "{{formatDate(item.finished_at, 'YYYY-MM-DD HH:mm')}} – {{item.status}}",
+            "date": "{{item.finished_at}}"
+        }
+    }
+}

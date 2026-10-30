@@ -1,0 +1,7 @@
+{
+    "url": "/rules/{{parameters.ruleId}}/",
+    "method": "GET",
+    "response": {
+        "output": "{{body}}"
+    }
+}

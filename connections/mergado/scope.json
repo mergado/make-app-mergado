@@ -1,0 +1,14 @@
+[
+    "user.read",
+    "user.shops.read",
+    "shop.read",
+    "shop.projects.read",
+    "project.read",
+    "project.elements.read",
+    "project.products.read",
+    "project.queries.read",
+    "project.queries.write",
+    "project.rules.read",
+    "project.rules.write",
+    "project.logs.read"
+]

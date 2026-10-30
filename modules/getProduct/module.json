@@ -1,0 +1,5 @@
+{
+    "label": "Get a Product",
+    "description": "Returns information about a specific product by its ID.",
+    "typeId": 4
+}

@@ -1,0 +1,926 @@
+{
+    "_popis": {
+        "ucel": "Zdroj pravdy pro funkce Mergada v Make appce (make-app-mergado/) a v n8n nodu (n8n-nodes-mergado/). Obsah je stejný, tvar (názvy, typy modulů) podle platformy. Make moduly se z tohoto souboru generují: node make-app-mergado/scripts/generate.mjs.",
+        "api": "Základ API: baseUrl, hlavička s verzí (bez ní API odpovídá ve formátu z roku 2020) a kopie OpenAPI spec, ze které se berou výstupní pole.",
+        "slovnik": "Jednotné pojmy pro popisky a nápovědu na obou platformách.",
+        "vybery": "Rozbalovací seznamy (Make RPC, n8n listSearch): endpoint, label a value, na čem závisí (dependsOn), filtr položek, help (nápověda pole, které výběr používá) a limit (max. počet položek ve výběru).",
+        "funkce[].id": "Stabilní ID funkce: <resource>.<operation>.",
+        "funkce[].resource / operation": "Neutrální pojmenování (n8n styl). operation: get, getAll, search, create, getCurrent, pauseResume, watch, call.",
+        "funkce[].method / endpoint": "HTTP metoda a cesta. {param} odkazuje na vstup se stejným jménem. Výjimka: {userId} není vstup, je to ID přihlášeného uživatele.",
+        "funkce[].scope": "OAuth scope, který funkce potřebuje (musí být v connection.scope Make appky i v n8n credentialu).",
+        "funkce[].inputs": "Vstupy: name, type (text | select | boolean | uinteger | array), label, required, help, options (pro pevný select), source = 'vyber:<id>' pro rozbalovací seznam. platforms = jen pro vyjmenované platformy (chybí = obě).",
+        "funkce[].request": "Co se posílá: qs a body. Hodnota '$name' = vstup (prázdný nepovinný vstup se vynechá), '$name|csvJsonArray' = text oddělený čárkami převedený na JSON pole řetězců (values_to_extract=[\"A\",\"B\"]). Ostatní hodnoty jsou konstanty.",
+        "funkce[].pagination": "null, nebo { type: 'limit-offset', pageSize, total } – total je pole s celkovým počtem v odpovědi. Uživatel zadává jen Limit (Make) / Return All + Limit (n8n).",
+        "funkce[].iterate": "Kde je v odpovědi seznam položek (např. 'data'); chybí = odpověď je jedna položka.",
+        "funkce[].output": "schema = odkud v OpenAPI vzít výstupní pole (path, method, item = true když jde o položku seznamu data[]); keyFields = klíčová pole pro help a ukázky; computed = pole, která API nevrací a dopočítáváme je ({pole} = hodnota z položky).",
+        "funkce[].trigger": "Jen pro watch: log, statuses (filtr status in […]), orderBy, dateField. Make: polling trigger s epoch, n8n: MergadoTrigger s event.",
+        "funkce[].make": "Make: name (ID modulu), label, description, type (search | action | trigger | universal).",
+        "funkce[].n8n": "n8n: resource, operation a name operace v n8n-nodes-mergado (u triggeru node MergadoTrigger a event). Pole, pokud funkci v n8n pokrývá víc operací; null = v n8n zatím není.",
+        "funkce[].scenar": "Ukázkový scénář použití (pro help a žádost o review).",
+        "app": "Název a krátký popis aplikace (Make: app description, n8n: description v Mergado.node.json)."
+    },
+    "api": {
+        "baseUrl": "https://api.mergado.com",
+        "version": "2026-10-30",
+        "headers": {
+            "use-mergado-api-version": "2026-10-30"
+        },
+        "openapi": "mergado-api/openapi-2026-10-30.json",
+        "outputFeedUrl": "https://feeds.mergado.com/{slug}.xml"
+    },
+    "slovnik": {
+        "e-shop": "E-shop (shop) – nejvyšší úroveň, vlastní projekty.",
+        "project": "Projekt – jeden výstupní feed pro jeden kanál. Pole url je VSTUPNÍ feed, výstupní je output_feed_url.",
+        "query": "Výběr (query) – uložený filtr produktů v MQL.",
+        "rule": "Pravidlo – úprava dat v projektu. Stav se popisuje jen jako Pause / Resume (pole applies: false = paused, true = active).",
+        "mql": "MQL – Mergado Query Language, vyhodnocuje se nad vstupními hodnotami produktů, názvy elementů rozlišují velikost písmen.",
+        "element": "Element – cesta v datech produktu (např. PRICE_VAT, PARAM | PARAM_NAME)."
+    },
+    "vybery": {
+        "shop": {
+            "endpoint": "/users/{userId}/shops/",
+            "label": "{name}",
+            "value": "id",
+            "pozn": "{userId} = ID přihlášeného uživatele (z GET /me/ nebo user_id z odpovědi na token). Hodnota me nefunguje – /users/me/shops/ vrací 404 (ověřeno v Make 30. 10.).",
+            "help": "Mergado e-shop. The list shows the e-shops your Mergado account has access to.",
+            "limit": 300
+        },
+        "project": {
+            "endpoint": "/shops/{shopId}/projects/",
+            "dependsOn": "shop",
+            "label": "{name} ({output_format})",
+            "value": "id",
+            "help": "Project (output feed) of the selected e-shop; the output channel is in brackets. To enter a project ID instead, switch on Map.",
+            "limit": 300
+        },
+        "rule": {
+            "endpoint": "/projects/{projectId}/rules/",
+            "dependsOn": "project",
+            "label": "{name|element_path|id} ({type}, active|paused)",
+            "value": "id",
+            "help": "Rule of the selected project. To enter a rule ID instead, switch on Map.",
+            "limit": 300
+        },
+        "pausableRule": {
+            "endpoint": "/projects/{projectId}/rules/",
+            "dependsOn": "project",
+            "label": "{name|element_path|id} ({type}, active|paused)",
+            "value": "id",
+            "filter": "is_pausable = true",
+            "pozn": "Skryje pravidla, která pozastavit nejde (převod formátu, pravidla rozšíření Bidding Fox, Pricing Fox, Feed Image Editor).",
+            "help": "Rule of the selected project. Only rules that can be paused are listed, so format conversion rules and rules of paid extensions (Bidding Fox, Pricing Fox, Feed Image Editor) are left out. To enter a rule ID instead, switch on Map.",
+            "limit": 300
+        }
+    },
+    "funkce": [
+        {
+            "id": "user.getCurrent",
+            "resource": "user",
+            "operation": "getCurrent",
+            "method": "GET",
+            "endpoint": "/me/",
+            "scope": "user.read",
+            "inputs": [],
+            "pagination": null,
+            "output": {
+                "schema": {
+                    "path": "/me/",
+                    "method": "get"
+                },
+                "keyFields": [
+                    "id",
+                    "username",
+                    "email",
+                    "name",
+                    "locale"
+                ]
+            },
+            "make": {
+                "name": "getCurrentUser",
+                "label": "Get Current User",
+                "description": "Returns information about the Mergado user the connection belongs to.",
+                "type": "action"
+            },
+            "n8n": {
+                "resource": "user",
+                "operation": "getCurrent",
+                "name": "Get Current"
+            },
+            "scenar": "Ověření připojení a načtení e-mailu uživatele do uvítací zprávy."
+        },
+        {
+            "id": "shop.getAll",
+            "resource": "shop",
+            "operation": "getAll",
+            "method": "GET",
+            "endpoint": "/users/{userId}/shops/",
+            "scope": "user.shops.read",
+            "inputs": [],
+            "pagination": {
+                "type": "limit-offset",
+                "pageSize": 100,
+                "total": "total_results"
+            },
+            "iterate": "data",
+            "output": {
+                "schema": {
+                    "path": "/users/{user_identifier}/shops/",
+                    "method": "get",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "name",
+                    "exported_items"
+                ],
+                "pozn": "Pole web seznam e-shopů nevrací (živé API s verzí 2026-10-30, ověřeno z n8n 30. 10.), i když je v příkladu OpenAPI."
+            },
+            "make": {
+                "name": "listShops",
+                "label": "List E-shops",
+                "description": "Returns a list of e-shops you have access to.",
+                "type": "search"
+            },
+            "n8n": {
+                "resource": "shop",
+                "operation": "getAll",
+                "name": "Get Many"
+            },
+            "scenar": "Týdenní přehled e-shopů a počtu exportovaných položek do Google Sheets.",
+            "pozn": "{userId} = ID přihlášeného uživatele (z GET /me/ nebo user_id z odpovědi na token). Hodnota me nefunguje – /users/me/shops/ vrací 404 (ověřeno v Make 30. 10.)."
+        },
+        {
+            "id": "project.getAll",
+            "resource": "project",
+            "operation": "getAll",
+            "method": "GET",
+            "endpoint": "/shops/{shopId}/projects/",
+            "scope": "shop.projects.read",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                }
+            ],
+            "pagination": {
+                "type": "limit-offset",
+                "pageSize": 100,
+                "total": "total_results"
+            },
+            "iterate": "data",
+            "output": {
+                "schema": {
+                    "path": "/shops/{id}/projects/",
+                    "method": "get",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "name",
+                    "output_format",
+                    "output_feed_url",
+                    "url",
+                    "exported_items",
+                    "is_paused"
+                ],
+                "computed": {
+                    "output_feed_url": "https://feeds.mergado.com/{slug}.xml"
+                }
+            },
+            "make": {
+                "name": "listProjects",
+                "label": "List Projects",
+                "description": "Returns a list of projects (output feeds) in a specific e-shop.",
+                "type": "search"
+            },
+            "n8n": {
+                "resource": "project",
+                "operation": "getAll",
+                "name": "Get Many"
+            },
+            "scenar": "Seznam výstupních feedů e-shopu s jejich URL pro kontrolu v tabulce."
+        },
+        {
+            "id": "project.get",
+            "resource": "project",
+            "operation": "get",
+            "method": "GET",
+            "endpoint": "/projects/{projectId}/",
+            "scope": "project.read",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                }
+            ],
+            "pagination": null,
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/",
+                    "method": "get"
+                },
+                "keyFields": [
+                    "id",
+                    "name",
+                    "output_format",
+                    "output_feed_url",
+                    "url",
+                    "exported_items",
+                    "is_paused",
+                    "data_updated_at"
+                ],
+                "computed": {
+                    "output_feed_url": "https://feeds.mergado.com/{slug}.xml"
+                }
+            },
+            "make": {
+                "name": "getProject",
+                "label": "Get a Project",
+                "description": "Returns information about a specific project by its ID, including the URL of its output feed.",
+                "type": "action"
+            },
+            "n8n": {
+                "resource": "project",
+                "operation": "get",
+                "name": "Get"
+            },
+            "scenar": "Po exportu feedu poslat do Slacku odkaz na výstupní feed (output_feed_url)."
+        },
+        {
+            "id": "element.getAll",
+            "resource": "element",
+            "operation": "getAll",
+            "method": "GET",
+            "endpoint": "/projects/{projectId}/elements/",
+            "scope": "project.elements.read",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                }
+            ],
+            "pagination": null,
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/elements/",
+                    "method": "get"
+                },
+                "keyFields": [
+                    "elements",
+                    "attributes"
+                ],
+                "pozn": "Strom pojmenovaný podle názvů elementů, ne seznam – vrací se jako jedna položka."
+            },
+            "make": {
+                "name": "getProjectElements",
+                "label": "Get Project Elements",
+                "description": "Returns the element tree of a specific project. Use the element names in MQL queries and rules.",
+                "type": "action"
+            },
+            "n8n": {
+                "resource": "element",
+                "operation": "getAll",
+                "name": "Get Many"
+            },
+            "scenar": "Zjistit přesné názvy elementů před sestavením MQL dotazu."
+        },
+        {
+            "id": "product.search",
+            "resource": "product",
+            "operation": "search",
+            "method": "POST",
+            "endpoint": "/projects/{projectId}/products",
+            "scope": "project.products.read",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                },
+                {
+                    "name": "mql",
+                    "type": "text",
+                    "label": "MQL query",
+                    "required": false,
+                    "help": "Condition in Mergado Query Language, for example `PRICE_VAT < 100`. It is evaluated on the input values of the products. Element names are case-sensitive. Leave empty to return all products."
+                },
+                {
+                    "name": "isHidden",
+                    "type": "select",
+                    "label": "Visibility",
+                    "required": false,
+                    "options": [
+                        {
+                            "label": "Only visible products",
+                            "value": "false"
+                        },
+                        {
+                            "label": "Only hidden products",
+                            "value": "true"
+                        }
+                    ],
+                    "help": "Leave empty to return both visible and hidden products."
+                },
+                {
+                    "name": "valuesToExtract",
+                    "type": "text",
+                    "label": "Values to extract",
+                    "required": false,
+                    "help": "Comma-separated element paths or variable names, for example `ITEM_ID,PRICE_VAT,PARAM | PARAM_NAME`. The response then contains only these values in Extracted values instead of all product data."
+                }
+            ],
+            "request": {
+                "body": {
+                    "mql": "$mql"
+                },
+                "qs": {
+                    "is_hidden": "$isHidden",
+                    "values_to_extract": "$valuesToExtract|csvJsonArray"
+                }
+            },
+            "pagination": {
+                "type": "limit-offset",
+                "pageSize": 100,
+                "total": "total_results"
+            },
+            "iterate": "data",
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/products",
+                    "method": "post",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "data",
+                    "extracted_values",
+                    "updated_at"
+                ],
+                "pozn": "data a extracted_values se vylučují: s values_to_extract přijde jen extracted_values. is_hidden a další ruční stav jen s include_additional_fields=true, který se neposílá (ověřeno naživo z n8n 30. 10.)."
+            },
+            "make": {
+                "name": "searchProducts",
+                "label": "Search Products",
+                "description": "Returns a list of products in a specific project filtered by an MQL query.",
+                "type": "search"
+            },
+            "n8n": {
+                "resource": "product",
+                "operation": "search",
+                "name": "Search"
+            },
+            "scenar": "Každé ráno najít produkty bez obrázku (MQL) a poslat jejich seznam e-mailem."
+        },
+        {
+            "id": "product.get",
+            "resource": "product",
+            "operation": "get",
+            "method": "GET",
+            "endpoint": "/products/{productId}/",
+            "scope": "project.products.read",
+            "inputs": [
+                {
+                    "name": "productId",
+                    "type": "text",
+                    "label": "Product ID",
+                    "required": true,
+                    "help": "Mergado product ID, returned for example by Search Products."
+                }
+            ],
+            "pagination": null,
+            "output": {
+                "schema": {
+                    "path": "/products/{id}/",
+                    "method": "get"
+                },
+                "keyFields": [
+                    "id",
+                    "data",
+                    "is_hidden",
+                    "manual_changes",
+                    "updated_at"
+                ]
+            },
+            "make": {
+                "name": "getProduct",
+                "label": "Get a Product",
+                "description": "Returns information about a specific product by its ID.",
+                "type": "action"
+            },
+            "n8n": {
+                "resource": "product",
+                "operation": "get",
+                "name": "Get"
+            },
+            "scenar": "Načíst detail produktu z ID, které přišlo z jiného systému."
+        },
+        {
+            "id": "query.getAll",
+            "resource": "query",
+            "operation": "getAll",
+            "method": "GET",
+            "endpoint": "/projects/{projectId}/queries/",
+            "scope": "project.queries.read",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                }
+            ],
+            "pagination": {
+                "type": "limit-offset",
+                "pageSize": 100,
+                "total": "total_results"
+            },
+            "iterate": "data",
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/queries/",
+                    "method": "get",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "name",
+                    "query",
+                    "product_count"
+                ]
+            },
+            "make": {
+                "name": "listQueries",
+                "label": "List Queries",
+                "description": "Returns a list of queries (saved product selections) in a specific project.",
+                "type": "search"
+            },
+            "n8n": {
+                "resource": "query",
+                "operation": "getAll",
+                "name": "Get Many"
+            },
+            "scenar": "Hlídat počet produktů ve výběru „Skladem“ a upozornit při poklesu."
+        },
+        {
+            "id": "query.create",
+            "resource": "query",
+            "operation": "create",
+            "method": "POST",
+            "endpoint": "/projects/{projectId}/queries/",
+            "scope": "project.queries.write",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                },
+                {
+                    "name": "name",
+                    "type": "text",
+                    "label": "Name",
+                    "required": true,
+                    "help": "Name of the query as it will appear in Mergado."
+                },
+                {
+                    "name": "query",
+                    "type": "text",
+                    "label": "MQL query",
+                    "required": true,
+                    "help": "Selection in Mergado Query Language, for example `PRICE_VAT < 200`. Element names are case-sensitive."
+                }
+            ],
+            "request": {
+                "body": {
+                    "name": "$name",
+                    "query": "$query"
+                }
+            },
+            "pagination": null,
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/queries/",
+                    "method": "get",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "name",
+                    "query"
+                ]
+            },
+            "make": {
+                "name": "createQuery",
+                "label": "Create a Query",
+                "description": "Creates a new query (saved product selection) in a specific project.",
+                "type": "action"
+            },
+            "n8n": {
+                "resource": "query",
+                "operation": "create",
+                "name": "Create"
+            },
+            "scenar": "Založit výběr pro novou kampaň z formuláře (název + MQL)."
+        },
+        {
+            "id": "rule.getAll",
+            "resource": "rule",
+            "operation": "getAll",
+            "method": "GET",
+            "endpoint": "/projects/{projectId}/rules/",
+            "scope": "project.rules.read",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                }
+            ],
+            "pagination": {
+                "type": "limit-offset",
+                "pageSize": 100,
+                "total": "total"
+            },
+            "iterate": "data",
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/rules/",
+                    "method": "get",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "name",
+                    "type",
+                    "applies",
+                    "is_pausable",
+                    "priority"
+                ]
+            },
+            "make": {
+                "name": "listRules",
+                "label": "List Rules",
+                "description": "Returns a list of rules in a specific project, ordered by priority.",
+                "type": "search"
+            },
+            "n8n": {
+                "resource": "rule",
+                "operation": "getAll",
+                "name": "Get Many"
+            },
+            "scenar": "Přehled pozastavených pravidel napříč projekty do tabulky."
+        },
+        {
+            "id": "rule.get",
+            "resource": "rule",
+            "operation": "get",
+            "method": "GET",
+            "endpoint": "/rules/{ruleId}/",
+            "scope": "project.rules.read",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                },
+                {
+                    "name": "ruleId",
+                    "type": "select",
+                    "label": "Rule",
+                    "required": true,
+                    "source": "vyber:rule"
+                }
+            ],
+            "pagination": null,
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/rules/",
+                    "method": "get",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "name",
+                    "type",
+                    "applies",
+                    "schedule",
+                    "queries"
+                ]
+            },
+            "make": {
+                "name": "getRule",
+                "label": "Get a Rule",
+                "description": "Returns information about a specific rule by its ID.",
+                "type": "action"
+            },
+            "n8n": {
+                "resource": "rule",
+                "operation": "get",
+                "name": "Get"
+            },
+            "scenar": "Zkontrolovat, jestli je pravidlo sezónní kampaně aktivní."
+        },
+        {
+            "id": "rule.pauseResume",
+            "resource": "rule",
+            "operation": "pauseResume",
+            "method": "PATCH",
+            "endpoint": "/rules/{ruleId}/",
+            "scope": "project.rules.write",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                },
+                {
+                    "name": "ruleId",
+                    "type": "select",
+                    "label": "Rule",
+                    "required": true,
+                    "source": "vyber:pausableRule"
+                },
+                {
+                    "name": "applies",
+                    "type": "select",
+                    "label": "Action",
+                    "required": true,
+                    "options": [
+                        {
+                            "label": "Pause",
+                            "value": false
+                        },
+                        {
+                            "label": "Resume",
+                            "value": true
+                        }
+                    ],
+                    "help": "Pause stops applying the rule to the products, its settings are kept. Resume applies a paused rule again. The change shows in the output feed after the next feed update."
+                }
+            ],
+            "request": {
+                "body": {
+                    "applies": "$applies"
+                }
+            },
+            "pagination": null,
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/rules/",
+                    "method": "get",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "name",
+                    "applies"
+                ]
+            },
+            "make": {
+                "name": "pauseResumeRule",
+                "label": "Pause or Resume a Rule",
+                "description": "Pauses or resumes a specific rule. The change shows in the output feed after the next feed update.",
+                "type": "action"
+            },
+            "n8n": [
+                {
+                    "resource": "rule",
+                    "operation": "pause",
+                    "name": "Pause"
+                },
+                {
+                    "resource": "rule",
+                    "operation": "resume",
+                    "name": "Resume"
+                }
+            ],
+            "scenar": "V pátek v 0:00 spustit pravidlo Black Friday (Resume), v pondělí ho pozastavit (Pause)."
+        },
+        {
+            "id": "export.watch",
+            "resource": "export",
+            "operation": "watch",
+            "method": "GET",
+            "endpoint": "/projects/{projectId}/exportlogs/",
+            "scope": "project.logs.read",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                }
+            ],
+            "trigger": {
+                "log": "exportlogs",
+                "statuses": [
+                    "success",
+                    "warning"
+                ],
+                "orderBy": "-finished_at",
+                "dateField": "finished_at"
+            },
+            "pagination": {
+                "type": "limit-offset",
+                "pageSize": 100,
+                "total": "total_results"
+            },
+            "iterate": "data",
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/exportlogs/",
+                    "method": "get",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "status",
+                    "finished_at",
+                    "items",
+                    "warnings"
+                ]
+            },
+            "make": {
+                "name": "watchFeedExports",
+                "label": "Watch Feed Exports",
+                "description": "Triggers when an output feed of a specific project is exported (successfully or with warnings).",
+                "type": "trigger"
+            },
+            "n8n": {
+                "node": "MergadoTrigger",
+                "event": "exportFinished",
+                "name": "Feed Exported"
+            },
+            "scenar": "Feed se vygeneroval → zpráva do Slacku s počtem položek a odkazem na feed."
+        },
+        {
+            "id": "import.watchFailed",
+            "resource": "import",
+            "operation": "watch",
+            "method": "GET",
+            "endpoint": "/projects/{projectId}/importlogs/",
+            "scope": "project.logs.read",
+            "inputs": [
+                {
+                    "name": "shopId",
+                    "type": "select",
+                    "label": "E-shop",
+                    "required": true,
+                    "source": "vyber:shop"
+                },
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "source": "vyber:project"
+                }
+            ],
+            "trigger": {
+                "log": "importlogs",
+                "statuses": [
+                    "failure"
+                ],
+                "orderBy": "-finished_at",
+                "dateField": "finished_at"
+            },
+            "pagination": {
+                "type": "limit-offset",
+                "pageSize": 100,
+                "total": "total_results"
+            },
+            "iterate": "data",
+            "output": {
+                "schema": {
+                    "path": "/projects/{id}/importlogs/",
+                    "method": "get",
+                    "item": true
+                },
+                "keyFields": [
+                    "id",
+                    "status",
+                    "finished_at",
+                    "errors"
+                ]
+            },
+            "make": {
+                "name": "watchFailedImports",
+                "label": "Watch Failed Imports",
+                "description": "Triggers when an import of the input feed of a specific project fails.",
+                "type": "trigger"
+            },
+            "n8n": {
+                "node": "MergadoTrigger",
+                "event": "importFailed",
+                "name": "Import Failed"
+            },
+            "scenar": "Import vstupního feedu selhal → úkol do IS / e-mail správci e-shopu."
+        },
+        {
+            "id": "api.call",
+            "resource": "api",
+            "operation": "call",
+            "method": "*",
+            "endpoint": "*",
+            "scope": "*",
+            "inputs": [],
+            "pagination": null,
+            "make": {
+                "name": "makeApiCall",
+                "label": "Make an API Call",
+                "description": "Performs an arbitrary authorized API call.",
+                "type": "universal"
+            },
+            "n8n": null,
+            "pozn": "Make modul se negeneruje (ručně v make-app-mergado/modules/makeApiCall). V n8n odpovídá HTTP Request node s credentialem Mergado.",
+            "scenar": "Cokoli dalšího z Mergado API s hotovým přihlášením."
+        }
+    ],
+    "app": {
+        "label": "Mergado",
+        "description": "Manage product feeds in Mergado: list e-shops and projects, search products with MQL, create queries, pause or resume rules, and react to feed exports and failed imports."
+    }
+}

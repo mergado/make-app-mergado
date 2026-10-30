@@ -1,0 +1,109 @@
+[
+    {
+        "name": "applies",
+        "label": "Applies",
+        "type": "boolean"
+    },
+    {
+        "name": "data",
+        "label": "Data",
+        "type": "collection"
+    },
+    {
+        "name": "element_path",
+        "label": "Element path",
+        "type": "text"
+    },
+    {
+        "name": "id",
+        "label": "ID",
+        "type": "text"
+    },
+    {
+        "name": "is_deletable",
+        "label": "Is deletable",
+        "type": "boolean"
+    },
+    {
+        "name": "is_editable",
+        "label": "Is editable",
+        "type": "boolean"
+    },
+    {
+        "name": "is_movable",
+        "label": "Is movable",
+        "type": "boolean"
+    },
+    {
+        "name": "is_pausable",
+        "label": "Is pausable",
+        "type": "boolean"
+    },
+    {
+        "name": "name",
+        "label": "Name",
+        "type": "text"
+    },
+    {
+        "name": "note",
+        "label": "Note",
+        "type": "text"
+    },
+    {
+        "name": "schedule",
+        "label": "Schedule",
+        "type": "collection",
+        "spec": [
+            {
+                "name": "enabled",
+                "label": "Enabled",
+                "type": "boolean"
+            },
+            {
+                "name": "date_from",
+                "label": "Date from",
+                "type": "text"
+            },
+            {
+                "name": "date_until",
+                "label": "Date until",
+                "type": "text"
+            },
+            {
+                "name": "apply_before",
+                "label": "Apply before",
+                "type": "boolean"
+            },
+            {
+                "name": "apply_after",
+                "label": "Apply after",
+                "type": "boolean"
+            },
+            {
+                "name": "weekdays",
+                "label": "Weekdays",
+                "type": "collection"
+            }
+        ]
+    },
+    {
+        "name": "priority",
+        "label": "Priority",
+        "type": "text"
+    },
+    {
+        "name": "project_id",
+        "label": "Project ID",
+        "type": "text"
+    },
+    {
+        "name": "queries",
+        "label": "Queries",
+        "type": "array"
+    },
+    {
+        "name": "type",
+        "label": "Type",
+        "type": "text"
+    }
+]

@@ -1,0 +1,7 @@
+{
+    "url": "/products/{{parameters.productId}}/",
+    "method": "GET",
+    "response": {
+        "output": "{{body}}"
+    }
+}

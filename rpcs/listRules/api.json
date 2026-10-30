@@ -1,0 +1,12 @@
+{
+    "url": "/projects/{{parameters.projectId}}/rules/",
+    "method": "GET",
+    "response": {
+        "iterate": "{{body.data}}",
+        "output": {
+            "label": "{{ifempty(item.name, ifempty(item.element_path, item.id))}} ({{item.type}}, {{if(item.applies, 'active', 'paused')}})",
+            "value": "{{item.id}}"
+        },
+        "limit": 300
+    }
+}

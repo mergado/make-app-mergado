@@ -1,0 +1,9 @@
+[
+    {
+        "name": "limit",
+        "type": "uinteger",
+        "label": "Limit",
+        "default": 10,
+        "help": "Maximum number of e-shops Make will return during one execution cycle."
+    }
+]

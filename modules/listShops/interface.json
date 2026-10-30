@@ -1,0 +1,72 @@
+[
+    {
+        "name": "avatar_url",
+        "label": "Avatar URL",
+        "type": "text"
+    },
+    {
+        "name": "created_at",
+        "label": "Created at",
+        "type": "date"
+    },
+    {
+        "name": "exported_items",
+        "label": "Exported items",
+        "type": "number"
+    },
+    {
+        "name": "id",
+        "label": "ID",
+        "type": "text"
+    },
+    {
+        "name": "name",
+        "label": "Name",
+        "type": "text"
+    },
+    {
+        "name": "owner_id",
+        "label": "Owner ID",
+        "type": "text"
+    },
+    {
+        "name": "permissions",
+        "label": "Permissions",
+        "type": "array",
+        "spec": {
+            "type": "collection",
+            "spec": [
+                {
+                    "name": "role",
+                    "label": "Role",
+                    "type": "text"
+                },
+                {
+                    "name": "user_id",
+                    "label": "User ID",
+                    "type": "text"
+                }
+            ]
+        }
+    },
+    {
+        "name": "tariff_id",
+        "label": "Tariff ID",
+        "type": "text"
+    },
+    {
+        "name": "tariff_validity",
+        "label": "Tariff validity",
+        "type": "date"
+    },
+    {
+        "name": "web",
+        "label": "Website",
+        "type": "text"
+    },
+    {
+        "name": "xml_domain",
+        "label": "XML domain",
+        "type": "text"
+    }
+]

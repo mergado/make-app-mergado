@@ -1,0 +1,51 @@
+[
+    {
+        "name": "shopId",
+        "type": "select",
+        "label": "E-shop",
+        "required": true,
+        "options": {
+            "store": "rpc://listShops",
+            "nested": [
+                {
+                    "name": "projectId",
+                    "type": "select",
+                    "label": "Project",
+                    "required": true,
+                    "options": {
+                        "store": "rpc://listProjects",
+                        "nested": [
+                            {
+                                "name": "ruleId",
+                                "type": "select",
+                                "label": "Rule",
+                                "required": true,
+                                "options": "rpc://listPausableRules",
+                                "help": "Rule of the selected project. Only rules that can be paused are listed, so format conversion rules and rules of paid extensions (Bidding Fox, Pricing Fox, Feed Image Editor) are left out. To enter a rule ID instead, switch on Map."
+                            }
+                        ]
+                    },
+                    "help": "Project (output feed) of the selected e-shop; the output channel is in brackets. To enter a project ID instead, switch on Map."
+                }
+            ]
+        },
+        "help": "Mergado e-shop. The list shows the e-shops your Mergado account has access to."
+    },
+    {
+        "name": "applies",
+        "type": "select",
+        "label": "Action",
+        "required": true,
+        "help": "Pause stops applying the rule to the products, its settings are kept. Resume applies a paused rule again. The change shows in the output feed after the next feed update.",
+        "options": [
+            {
+                "label": "Pause",
+                "value": false
+            },
+            {
+                "label": "Resume",
+                "value": true
+            }
+        ]
+    }
+]

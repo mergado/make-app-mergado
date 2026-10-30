@@ -1,0 +1,139 @@
+[
+    {
+        "name": "avatars",
+        "label": "Avatars",
+        "type": "collection",
+        "spec": [
+            {
+                "name": "30",
+                "label": "30",
+                "type": "text"
+            },
+            {
+                "name": "80",
+                "label": "80",
+                "type": "text"
+            }
+        ]
+    },
+    {
+        "name": "city",
+        "label": "City",
+        "type": "text"
+    },
+    {
+        "name": "company",
+        "label": "Company",
+        "type": "text"
+    },
+    {
+        "name": "country",
+        "label": "Country",
+        "type": "text"
+    },
+    {
+        "name": "currency",
+        "label": "Currency",
+        "type": "text"
+    },
+    {
+        "name": "dic",
+        "label": "Dic",
+        "type": "text"
+    },
+    {
+        "name": "email",
+        "label": "Email",
+        "type": "text"
+    },
+    {
+        "name": "first_name",
+        "label": "First name",
+        "type": "text"
+    },
+    {
+        "name": "ico",
+        "label": "Ico",
+        "type": "text"
+    },
+    {
+        "name": "id",
+        "label": "ID",
+        "type": "text"
+    },
+    {
+        "name": "invoice_months",
+        "label": "Invoice months",
+        "type": "number"
+    },
+    {
+        "name": "invoicing_validity_date",
+        "label": "Invoicing validity date",
+        "type": "text"
+    },
+    {
+        "name": "last_access",
+        "label": "Last access",
+        "type": "date"
+    },
+    {
+        "name": "last_name",
+        "label": "Last name",
+        "type": "text"
+    },
+    {
+        "name": "locale",
+        "label": "Locale",
+        "type": "text"
+    },
+    {
+        "name": "mfa_enabled",
+        "label": "Mfa enabled",
+        "type": "boolean"
+    },
+    {
+        "name": "name",
+        "label": "Name",
+        "type": "text"
+    },
+    {
+        "name": "news_checkbox",
+        "label": "News checkbox",
+        "type": "boolean"
+    },
+    {
+        "name": "phone",
+        "label": "Phone",
+        "type": "text"
+    },
+    {
+        "name": "postcode",
+        "label": "Postcode",
+        "type": "text"
+    },
+    {
+        "name": "registered_at",
+        "label": "Registered at",
+        "type": "date"
+    },
+    {
+        "name": "street",
+        "label": "Street",
+        "type": "text"
+    },
+    {
+        "name": "timezone",
+        "label": "Timezone",
+        "type": "text"
+    },
+    {
+        "name": "timezone_offset",
+        "label": "Timezone offset",
+        "type": "number"
+    },
+    {
+        "name": "username",
+        "label": "Username",
+        "type": "text"
+    }
+]

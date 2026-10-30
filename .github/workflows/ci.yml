@@ -1,0 +1,91 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Validate, generate, parity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Validate JSON
+        run: |
+          node -e '
+            const fs = require("fs"), path = require("path");
+            let files = 0, bad = 0;
+            const walk = (dir) => {
+              for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+                if (e.name === ".git" || e.name === "node_modules") continue;
+                const p = path.join(dir, e.name);
+                if (e.isDirectory()) walk(p);
+                else if (p.endsWith(".json")) {
+                  files++;
+                  try { JSON.parse(fs.readFileSync(p, "utf8")); }
+                  catch (err) { bad++; console.log(`::error file=${p}::${err.message}`); }
+                }
+              }
+            };
+            walk(".");
+            console.log(`${files} JSON files, ${bad} invalid`);
+            process.exit(bad ? 1 : 0);
+          '
+
+      - name: Generator leaves no diff
+        run: |
+          node scripts/generate.mjs
+          if [ -n "$(git status --porcelain)" ]; then
+            git status --porcelain
+            git diff
+            echo "::error::Generated files are out of sync with spec/mergado-moduly.json. Run node scripts/generate.mjs and commit the result."
+            exit 1
+          fi
+
+      - name: Parity with the n8n node
+        run: |
+          repo=https://github.com/mergado/n8n-nodes-mergado.git
+          if ! git ls-remote --exit-code --heads "$repo" main > /dev/null; then
+            echo "::warning::mergado/n8n-nodes-mergado has no main branch yet, parity check skipped."
+            exit 0
+          fi
+          git clone --depth 1 --branch main "$repo" ../n8n-nodes-mergado
+          if [ ! -f ../n8n-nodes-mergado/package.json ]; then
+            echo "::warning::mergado/n8n-nodes-mergado has no code on main yet, parity check skipped."
+            exit 0
+          fi
+          (cd ../n8n-nodes-mergado && if [ -f package-lock.json ]; then npm ci; else npm install; fi && npm run build)
+          node scripts/check-parity.mjs --n8n=../n8n-nodes-mergado
+
+  deploy:
+    name: Deploy to the private Make app
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency: make-deploy
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Uploads to the private app only. Publishing and the Make review are done by a person.
+      - name: Deploy
+        env:
+          MAKE_API_TOKEN: ${{ secrets.MAKE_API_TOKEN }}
+        run: |
+          if [ -z "$MAKE_API_TOKEN" ]; then
+            echo "::warning::Repository secret MAKE_API_TOKEN is not set, deployment skipped."
+            exit 0
+          fi
+          node scripts/make.mjs deploy

@@ -1,0 +1,26 @@
+{
+    "url": "/projects/{{parameters.projectId}}/exportlogs/",
+    "method": "GET",
+    "qs": {
+        "limit": 100,
+        "order_by": "-finished_at",
+        "filter": "[{\"field\":\"status\",\"op\":\"in\",\"value\":[\"success\",\"warning\"]}]"
+    },
+    "response": {
+        "iterate": "{{body.data}}",
+        "output": "{{item}}",
+        "limit": "{{parameters.limit}}",
+        "trigger": {
+            "id": "{{item.id}}",
+            "date": "{{item.finished_at}}",
+            "type": "date",
+            "order": "desc"
+        }
+    },
+    "pagination": {
+        "qs": {
+            "offset": "{{(pagination.page - 1) * 100}}"
+        },
+        "condition": "{{body.offset + body.limit < body.total_results}}"
+    }
+}
