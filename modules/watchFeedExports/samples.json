@@ -1,1 +1,13 @@
-{}
+{
+    "duration": 5,
+    "errors": {},
+    "finished_at": null,
+    "id": "1",
+    "initial": false,
+    "items": 20,
+    "processed_items": 20,
+    "started_at": "2016-06-01T15:52:45+00:00",
+    "status": "in_progress",
+    "user_id": "1",
+    "warnings": {}
+}

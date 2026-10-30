@@ -1,1 +1,15 @@
-{}
+{
+    "duration": 2.352,
+    "errors": {},
+    "finished_at": "2016-05-18T15:16:25+00:00",
+    "id": "75",
+    "items": 1,
+    "items_created": 1,
+    "items_processed": 1,
+    "items_removed": 0,
+    "items_updated": 0,
+    "started_at": "2016-05-18T15:16:23+00:00",
+    "status": "success",
+    "user_id": "1",
+    "warnings": {}
+}

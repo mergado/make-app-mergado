@@ -1,1 +1,30 @@
-{}
+{
+    "avatars": {
+        "30": "https://www.url.com/img1.png",
+        "80": "https://www.url.com/img2.png"
+    },
+    "city": "Brno",
+    "company": "Mergado",
+    "country": "cz",
+    "currency": "CZK",
+    "dic": "00000000",
+    "email": "lorem.ipsum@example.com",
+    "first_name": "Lorem",
+    "ico": "00000000",
+    "id": "6",
+    "invoice_months": 1,
+    "invoicing_validity_date": "2024-11-23",
+    "last_access": "2016-03-21T16:32:32+00:00",
+    "last_name": "Ipsum",
+    "locale": "cs_CZ",
+    "mfa_enabled": false,
+    "name": "Lorem Ipsum",
+    "news_checkbox": true,
+    "phone": "+420776276550",
+    "postcode": "61200",
+    "registered_at": "2015-11-03T16:08:17+00:00",
+    "street": "Palackého 123/456",
+    "timezone": "Europe/Prague",
+    "timezone_offset": null,
+    "username": "loremipsum"
+}

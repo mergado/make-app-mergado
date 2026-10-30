@@ -1,5 +1,5 @@
 {
-    "label": "Get Project Elements",
+    "label": "Get project elements",
     "description": "Returns the element tree of a specific project. Use the element names in MQL queries and rules.",
     "typeId": 4
 }

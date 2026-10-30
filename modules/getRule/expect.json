@@ -2,7 +2,7 @@
     {
         "name": "shopId",
         "type": "select",
-        "label": "E-shop",
+        "label": "E-shop ID",
         "required": true,
         "options": {
             "store": "rpc://listShops",
@@ -10,7 +10,7 @@
                 {
                     "name": "projectId",
                     "type": "select",
-                    "label": "Project",
+                    "label": "Project ID",
                     "required": true,
                     "options": {
                         "store": "rpc://listProjects",
@@ -18,17 +18,20 @@
                             {
                                 "name": "ruleId",
                                 "type": "select",
-                                "label": "Rule",
+                                "label": "Rule ID",
                                 "required": true,
                                 "options": "rpc://listRules",
-                                "help": "Rule of the selected project. To enter a rule ID instead, switch on Map."
+                                "help": "ID of the rule. Switch off **Map** to choose from the rules of the selected project.",
+                                "mode": "edit"
                             }
                         ]
                     },
-                    "help": "Project (output feed) of the selected e-shop; the output channel is in brackets. To enter a project ID instead, switch on Map."
+                    "help": "ID of the project (output feed). Switch off **Map** to choose from the projects of the selected e-shop.",
+                    "mode": "edit"
                 }
             ]
         },
-        "help": "Mergado e-shop. The list shows the e-shops your Mergado account has access to."
+        "help": "ID of the Mergado e-shop. Switch off **Map** to choose the e-shop from a list.",
+        "mode": "edit"
     }
 ]

@@ -1,5 +1,5 @@
 {
-    "label": "Watch Failed Imports",
+    "label": "Watch failed imports",
     "description": "Triggers when an import of the input feed of a specific project fails.",
     "typeId": 1
 }

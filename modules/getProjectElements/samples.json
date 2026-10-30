@@ -1,1 +1,89 @@
-{}
+{
+    "elements": {
+        "PRODUCT": {
+            "id": "1",
+            "is_attribute": false,
+            "is_hidden": true,
+            "is_hidden_set_manually": true,
+            "output_cdata": false,
+            "order": 1,
+            "origin": "input",
+            "children": {
+                "elements": {
+                    "ID": {
+                        "id": "10",
+                        "is_attribute": false,
+                        "is_hidden": false,
+                        "is_hidden_set_manually": false,
+                        "output_cdata": false,
+                        "order": 1,
+                        "origin": "input"
+                    }
+                },
+                "attributes": {
+                    "ID": {
+                        "id": "11",
+                        "is_attribute": true,
+                        "is_hidden": true,
+                        "is_hidden_set_manually": false,
+                        "output_cdata": false,
+                        "order": 1,
+                        "origin": "input"
+                    }
+                }
+            }
+        },
+        "IMAGE": {
+            "id": "3",
+            "is_attribute": false,
+            "is_hidden": false,
+            "is_hidden_set_manually": false,
+            "output_cdata": false,
+            "order": 3,
+            "origin": "output"
+        },
+        "PARAM": {
+            "id": "4",
+            "is_attribute": false,
+            "is_hidden": false,
+            "is_hidden_set_manually": false,
+            "output_cdata": false,
+            "order": 4,
+            "origin": "output",
+            "children": {
+                "elements": {
+                    "NAME": {
+                        "id": "5",
+                        "is_attribute": false,
+                        "is_hidden": false,
+                        "is_hidden_set_manually": false,
+                        "output_cdata": false,
+                        "order": 1,
+                        "origin": "output"
+                    },
+                    "VAL": {
+                        "id": "6",
+                        "is_attribute": false,
+                        "is_hidden": false,
+                        "is_hidden_set_manually": false,
+                        "output_cdata": true,
+                        "order": 2,
+                        "origin": "output"
+                    }
+                },
+                "attributes": {}
+            }
+        }
+    },
+    "attributes": {
+        "lang": {
+            "id": "12",
+            "is_attribute": true,
+            "is_hidden": false,
+            "is_hidden_set_manually": false,
+            "output_cdata": false,
+            "order": 1,
+            "origin": "input"
+        }
+    }
+}

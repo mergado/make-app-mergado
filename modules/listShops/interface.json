@@ -68,5 +68,20 @@
         "name": "xml_domain",
         "label": "XML domain",
         "type": "text"
+    },
+    {
+        "name": "paid_tariff_id",
+        "label": "Paid tariff ID",
+        "type": "text"
+    },
+    {
+        "name": "tariff_exceeded_reported",
+        "label": "Tariff exceeded reported",
+        "type": "date"
+    },
+    {
+        "name": "deleted_at",
+        "label": "Deleted at",
+        "type": "date"
     }
 ]
