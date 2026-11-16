@@ -8,16 +8,16 @@ The app is private in Make for now (`mergado-wp1zb2`, version 1, zone eu1). Publ
 
 | Module | Type | Mergado API |
 |---|---|---|
-| Watch Feed Exports | Trigger | `GET /projects/{id}/exportlogs/` (success, warning) |
-| Watch Failed Imports | Trigger | `GET /projects/{id}/importlogs/` (failure) |
-| Get Current User | Action | `GET /me/` |
-| List E-shops | Search | `GET /users/{userId}/shops/` |
-| List Projects, Get a Project | Search, Action | `GET /shops/{id}/projects/`, `GET /projects/{id}/` – both add `output_feed_url` |
-| Get Project Elements | Action | `GET /projects/{id}/elements/` |
-| Search Products, Get a Product | Search, Action | `POST /projects/{id}/products` (MQL, values to extract), `GET /products/{id}/` |
-| List Queries, Create a Query | Search, Action | `GET`/`POST /projects/{id}/queries/` |
-| List Rules, Get a Rule, Pause or Resume a Rule | Search, Action | `GET /projects/{id}/rules/`, `GET`/`PATCH /rules/{id}/` |
-| Make an API Call | Universal | any path |
+| Watch feed exports | Trigger | `GET /projects/{id}/exportlogs/` (success, warning) |
+| Watch failed imports | Trigger | `GET /projects/{id}/importlogs/` (failure) |
+| Get current user | Action | `GET /me/` |
+| List e-shops | Search | `GET /users/{userId}/shops/` |
+| List projects, Get a project | Search, Action | `GET /shops/{id}/projects/`, `GET /projects/{id}/` – both add `output_feed_url` |
+| Get project elements | Action | `GET /projects/{id}/elements/` |
+| Search products, Get a product | Search, Action | `POST /projects/{id}/products` (MQL, values to extract), `GET /products/{id}/` |
+| List queries, Create a query | Search, Action | `GET`/`POST /projects/{id}/queries/` |
+| List rules, Get a rule, Pause or resume a rule | Search, Action | `GET /projects/{id}/rules/`, `GET`/`PATCH /rules/{id}/` |
+| Make an API call | Universal | any path |
 
 User documentation shown in Make (Docs tab) is in [`docs/make-readme.md`](docs/make-readme.md).
 
@@ -29,7 +29,8 @@ The connection uses the same OAuth 2.0 server as the Mergado MCP server (`app.me
 
 [`spec/mergado-moduly.json`](spec/mergado-moduly.json) is the source of truth for both this app and the n8n node [`mergado/n8n-nodes-mergado`](https://github.com/mergado/n8n-nodes-mergado): functions, endpoints, scopes, inputs, dropdowns, output fields, vocabulary and the names used on each platform. The content is the same on both platforms, the shape follows each platform's conventions. The field descriptions are at the top of the file (in Czech).
 
-- The Make modules, RPCs, the version header in `base.json` and `app.json` are **generated** from the spec by [`scripts/generate.mjs`](scripts/generate.mjs). Output fields come from the Mergado OpenAPI document in [`spec/mergado-api/`](spec/mergado-api/). Change the spec, not the generated files.
+- The Make modules, RPCs, module groups (`groups.json`), the version header in `base.json` and `app.json` are **generated** from the spec by [`scripts/generate.mjs`](scripts/generate.mjs). Output fields and samples come from the Mergado OpenAPI document in [`spec/mergado-api/`](spec/mergado-api/). Change the spec, not the generated files.
+- Make conventions applied by the generator: sentence-case module labels, groups ordered triggers → entities → other, `limit` and pagination in searches, triggers and RPCs, and get or update modules whose ID fields start in Map mode (`mode: "edit"`, label ending in "ID").
 - The n8n node is written by hand. [`scripts/check-parity.mjs`](scripts/check-parity.mjs) checks that both platforms match the spec.
 - Hand-written parts: the connection (`connections/`), `base.json` (except the version header), the universal module `modules/makeApiCall/`, docs and the icon.
 

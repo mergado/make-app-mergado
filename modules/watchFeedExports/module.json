@@ -1,5 +1,5 @@
 {
-    "label": "Watch Feed Exports",
+    "label": "Watch feed exports",
     "description": "Triggers when an output feed of a specific project is exported (successfully or with warnings).",
     "typeId": 1
 }

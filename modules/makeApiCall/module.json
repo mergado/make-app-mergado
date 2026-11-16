@@ -1,5 +1,5 @@
 {
-    "label": "Make an API Call",
+    "label": "Make an API call",
     "description": "Performs an arbitrary authorized API call.",
     "typeId": 12
 }

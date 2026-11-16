@@ -1,5 +1,5 @@
 {
-    "label": "Get a Product",
+    "label": "Get a product",
     "description": "Returns information about a specific product by its ID.",
     "typeId": 4
 }

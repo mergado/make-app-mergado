@@ -91,5 +91,10 @@
                 }
             ]
         }
+    },
+    {
+        "name": "exported_product_group_count",
+        "label": "Exported product group count",
+        "type": "number"
     }
 ]

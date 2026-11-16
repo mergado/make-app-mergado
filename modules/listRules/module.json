@@ -1,5 +1,5 @@
 {
-    "label": "List Rules",
+    "label": "List rules",
     "description": "Returns a list of rules in a specific project, ordered by priority.",
     "typeId": 9
 }

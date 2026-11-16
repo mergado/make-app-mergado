@@ -1,9 +1,14 @@
 [
     {
+        "type": "banner",
+        "text": "Your connection must contain the scopes required by your API call. Endpoints outside the scopes granted when you created the connection return a 403 error.",
+        "theme": "info"
+    },
+    {
         "name": "url",
         "type": "text",
         "label": "URL",
-        "help": "Enter a path relative to `https://api.mergado.com`. For example: `/me/`",
+        "help": "Enter a path relative to `https://api.mergado.com`. For example, `/me/`.",
         "required": true
     },
     {

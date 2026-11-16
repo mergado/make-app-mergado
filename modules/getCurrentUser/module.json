@@ -1,5 +1,5 @@
 {
-    "label": "Get Current User",
+    "label": "Get current user",
     "description": "Returns information about the Mergado user the connection belongs to.",
     "typeId": 4
 }

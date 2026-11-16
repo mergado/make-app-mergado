@@ -1,1 +1,83 @@
-{}
+{
+    "data": {
+        "attributes": {
+            "TOP_LEVEL_ATTRIBUTE": {
+                "value": "123"
+            }
+        },
+        "elements": {
+            "IMAGE": [
+                {
+                    "value": "img 1"
+                },
+                {
+                    "value": "img 2"
+                },
+                {
+                    "value": "img 3"
+                }
+            ],
+            "ITEM_ID": [
+                {
+                    "attributes": {
+                        "id": "456"
+                    },
+                    "input_value": "123",
+                    "value": "123"
+                }
+            ],
+            "PARAM": [
+                {
+                    "elements": {
+                        "NAME": [
+                            {
+                                "value": "Barva"
+                            }
+                        ],
+                        "VAL": [
+                            {
+                                "value": "Černá"
+                            }
+                        ]
+                    }
+                },
+                {
+                    "elements": {
+                        "NAME": [
+                            {
+                                "value": "Barva"
+                            }
+                        ],
+                        "VAL": [
+                            {
+                                "value": "Modrá"
+                            }
+                        ]
+                    },
+                    "value": "value of PARAM"
+                }
+            ],
+            "PRICE": [
+                {
+                    "input_value": 69,
+                    "value": 69
+                }
+            ]
+        }
+    },
+    "extracted_values": {
+        "ITEM_ID": [
+            "123"
+        ],
+        "PARAM | VAL": [
+            "Černá",
+            "Modrá"
+        ],
+        "Variable": [
+            "value_from_variable"
+        ]
+    },
+    "id": "1693",
+    "output_changed_at": null,
+    "updated_at": "2016-04-28T17:18:50+00:00"
+}

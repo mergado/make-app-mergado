@@ -1,0 +1,47 @@
+[
+    {
+        "label": "Triggers",
+        "modules": [
+            "watchFeedExports",
+            "watchFailedImports"
+        ]
+    },
+    {
+        "label": "E-shops and projects",
+        "modules": [
+            "listShops",
+            "listProjects",
+            "getProject",
+            "getProjectElements"
+        ]
+    },
+    {
+        "label": "Products",
+        "modules": [
+            "searchProducts",
+            "getProduct"
+        ]
+    },
+    {
+        "label": "Queries",
+        "modules": [
+            "listQueries",
+            "createQuery"
+        ]
+    },
+    {
+        "label": "Rules",
+        "modules": [
+            "listRules",
+            "getRule",
+            "pauseResumeRule"
+        ]
+    },
+    {
+        "label": "Other",
+        "modules": [
+            "getCurrentUser",
+            "makeApiCall"
+        ]
+    }
+]

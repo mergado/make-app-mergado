@@ -88,7 +88,7 @@ const mapValues = (obj, inputs) => obj && Object.fromEntries(Object.entries(obj)
 const RPC_NAMES = {};
 const rpcName = (pickerId) => (RPC_NAMES[pickerId] ||= `list${pickerId.charAt(0).toUpperCase()}${pickerId.slice(1)}${pickerId.endsWith('s') ? '' : 's'}`);
 
-function makeParam(input) {
+function makeParam(input, editMode) {
     const p = { name: input.name, type: input.type, label: input.label };
     if (input.required) p.required = true;
     if (input.help) p.help = input.help;
@@ -100,13 +100,20 @@ function makeParam(input) {
         p.options = `rpc://${rpcName(pickerId)}`;
         // A picker field without its own help gets the picker's help text.
         if (!p.help && shared.vybery[pickerId].help) p.help = shared.vybery[pickerId].help;
+        // Get and update modules open with the ID mappable (Make RPC best practices: mode edit);
+        // a field that starts in Map mode carries "ID" in its label (Make naming conventions).
+        if (editMode) {
+            p.mode = 'edit';
+            p.label = `${input.label} ID`;
+            p.help = shared.vybery[pickerId].helpEdit || p.help;
+        }
     }
     return p;
 }
 // Picker selects nest (e-shop → project → rule), so each one appears once its parent is chosen.
-function makeParams(inputs) {
-    const pickers = inputs.filter((i) => i.source).map(makeParam);
-    const rest = inputs.filter((i) => !i.source).map(makeParam);
+function makeParams(inputs, editMode) {
+    const pickers = inputs.filter((i) => i.source).map((i) => makeParam(i, editMode));
+    const rest = inputs.filter((i) => !i.source).map((i) => makeParam(i, editMode));
     for (let i = pickers.length - 2; i >= 0; i--) {
         pickers[i].options = { store: pickers[i].options, nested: [pickers[i + 1]] };
     }
@@ -118,6 +125,23 @@ const limitParam = (what, trigger) => ({
     ...(trigger && { required: true }),
     help: `Maximum number of ${what} Make will return during one execution cycle.`,
 });
+
+// Samples come from the response examples in the OpenAPI document (first item for list endpoints).
+function exampleOf({ path, method, item }) {
+    const op = openapi.paths[path][method];
+    const r = deref(op.responses['200'] || op.responses['201']);
+    const c = Object.values(r.content)[0];
+    let ex = c.example ?? Object.values(c.examples || {})[0]?.value ?? merge(c.schema).example;
+    if (ex && item) ex = Array.isArray(ex.data) ? ex.data[0] : undefined;
+    return ex;
+}
+function sampleFor(fn, computed) {
+    const ex = exampleOf(fn.output.schema);
+    if (!ex || typeof ex !== 'object') return {};
+    const sample = structuredClone(ex);
+    for (const [k, tpl] of Object.entries(computed)) sample[k] = tpl.replace(/\{(\w+)\}/g, (_, f) => ex[f] ?? '');
+    return sample;
+}
 
 function computedOutput(schema, computed, src) {
     const out = Object.fromEntries(Object.keys(schema.properties || {}).map((k) => [k, `{{${src}.${k}}}`]));
@@ -153,12 +177,19 @@ function buildModule(fn) {
             condition: `{{body.offset + body.limit < body.${fn.pagination.total}}}`,
         };
     }
-    const what = fn.make.label.replace(/^(List|Search|Watch( Failed)?) /, '').toLowerCase();
-    const params = makeParams(fn.inputs.filter(forMake));
+    const what = fn.make.label.replace(/^(list|search|watch) /i, '').toLowerCase();
+    // Get and update actions (not create) work on an existing item the user often has the ID of.
+    const editMode = fn.make.type === 'action' && fn.method !== 'POST';
+    const params = makeParams(fn.inputs.filter(forMake), editMode);
     const typeId = { search: 9, action: 4, trigger: 1, universal: 12 }[fn.make.type];
-    const iface = [...toInterface(schema), ...Object.keys(computed).map((k) => ({ name: k, label: label(k), type: 'url' }))];
+    const iface = [
+        ...toInterface(schema),
+        ...(fn.output.extra || []).map((f) => ({ name: f.name, label: label(f.name), type: f.type })),
+        ...Object.keys(computed).map((k) => ({ name: k, label: label(k), type: 'url' })),
+    ];
     return {
         meta: { label: fn.make.label, description: fn.make.description, typeId },
+        samples: sampleFor(fn, computed),
         api,
         // Triggers only take static parameters; everything else is mappable.
         parameters: fn.make.type === 'trigger' ? [...params, limitParam(what, true)] : [],
@@ -202,9 +233,17 @@ for (const fn of generated) {
     write(`${dir}/parameters.json`, m.parameters);
     write(`${dir}/expect.json`, m.expect);
     write(`${dir}/interface.json`, m.interface);
-    write(`${dir}/samples.json`, {});
+    write(`${dir}/samples.json`, m.samples);
     if (m.epoch) write(`${dir}/epoch.json`, m.epoch);
 }
+// Module groups in the order of makeGroups (Make wants groups once an app has more than 10 modules).
+const groups = shared.makeGroups.map((label) => ({
+    label,
+    modules: shared.funkce.filter((fn) => fn.make && fn.make.group === label).map((fn) => fn.make.name),
+}));
+const ungrouped = shared.funkce.filter((fn) => fn.make && !shared.makeGroups.includes(fn.make.group));
+if (ungrouped.length) throw new Error(`Modules without a group from makeGroups: ${ungrouped.map((fn) => fn.make.name).join(', ')}`);
+write('groups.json', groups);
 for (const [id, picker] of Object.entries(shared.vybery)) {
     const r = buildRpc(id, picker);
     write(`rpcs/${rpcName(id)}/rpc.json`, { label: r.label });
