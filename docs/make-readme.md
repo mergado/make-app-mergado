@@ -9,6 +9,7 @@ With this app you can automate your work with Mergado: get information about e-s
 1. Add any Mergado module to a scenario and click **Create a connection**.
 2. Sign in to Mergado and allow Make to access your account. Keep the permissions that are preselected; when you uncheck some of them, the modules that need them fail with an access error.
 3. The connection works with all e-shops and projects your Mergado account has access to. Access is renewed automatically, you don't have to reconnect.
+4. The modules need only the default permissions. If you use **Make an API call** with other parts of the Mergado API (for example variables, feed audits or project tasks), turn on **Show advanced settings** when creating the connection and select them in **Additional scopes**.
 
 ## Modules
 

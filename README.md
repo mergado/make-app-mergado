@@ -23,7 +23,7 @@ User documentation shown in Make (Docs tab) is in [`docs/make-readme.md`](docs/m
 
 ### Sign-in
 
-The connection uses the same OAuth 2.0 server as the Mergado MCP server (`app.mergado.com`): a public client registered through dynamic client registration, PKCE (S256), scopes in the authorize request and refresh tokens. There is no client secret; the client ID is stored in the connection's common data in Make and in [`make-app.json`](make-app.json). Every request sends `use-mergado-api-version`, otherwise the API answers in its 2020 format.
+The connection uses the same OAuth 2.0 server as the Mergado MCP server (`app.mergado.com`): a public client (set up by Mergado for Make, no client secret), PKCE (S256), scopes in the authorize request (the defaults the modules need plus any the user selects in the connection's Additional scopes; all scopes of `app.mergado.com` are offered) and refresh tokens. There is no client secret; the client ID is stored in the connection's common data in Make and in [`make-app.json`](make-app.json). Every request sends `use-mergado-api-version`, otherwise the API answers in its 2020 format.
 
 ## Shared specification
 

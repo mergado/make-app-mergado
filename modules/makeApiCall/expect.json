@@ -1,7 +1,7 @@
 [
     {
         "type": "banner",
-        "text": "Your connection must contain the scopes required by your API call. Endpoints outside the scopes granted when you created the connection return a 403 error.",
+        "text": "Your connection must contain the scopes required by your API call. Endpoints outside the scopes granted when you created the connection return a 403 error. To add scopes, create a connection with them selected in Additional scopes under Show advanced settings.",
         "theme": "info"
     },
     {

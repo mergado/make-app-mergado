@@ -1,1 +1,108 @@
-[]
+[
+    {
+        "name": "additionalScopes",
+        "label": "Additional scopes",
+        "type": "select",
+        "multiple": true,
+        "advanced": true,
+        "help": "Scopes requested on top of the default ones the modules need. Add them when you use Make an API call with endpoints outside the default scopes, for example variables, feed audits or project tasks.",
+        "options": [
+            {
+                "label": "Read your notifications (user.notify.read)",
+                "value": "user.notify.read"
+            },
+            {
+                "label": "Send notifications to users (user.notify.write)",
+                "value": "user.notify.write"
+            },
+            {
+                "label": "Read your extensions (user.apps.read)",
+                "value": "user.apps.read"
+            },
+            {
+                "label": "Create and edit e-shop projects (shop.projects.write)",
+                "value": "shop.projects.write"
+            },
+            {
+                "label": "Read data from services connected to the e-shop (shop.proxy.read)",
+                "value": "shop.proxy.read"
+            },
+            {
+                "label": "Write data to services connected to the e-shop (shop.proxy.write)",
+                "value": "shop.proxy.write"
+            },
+            {
+                "label": "Read e-shop statistics (shop.stats.read)",
+                "value": "shop.stats.read"
+            },
+            {
+                "label": "Read e-shop statistics sources (shop.stats.source.read)",
+                "value": "shop.stats.source.read"
+            },
+            {
+                "label": "Read e-shop Google Analytics data (shop.ga.read)",
+                "value": "shop.ga.read"
+            },
+            {
+                "label": "Read e-shop notifications (shop.notify.read)",
+                "value": "shop.notify.read"
+            },
+            {
+                "label": "Send e-shop notifications (shop.notify.write)",
+                "value": "shop.notify.write"
+            },
+            {
+                "label": "Read e-shop extensions (shop.apps.read)",
+                "value": "shop.apps.read"
+            },
+            {
+                "label": "Edit projects (project.write)",
+                "value": "project.write"
+            },
+            {
+                "label": "Create and edit project elements (project.elements.write)",
+                "value": "project.elements.write"
+            },
+            {
+                "label": "Read variables (project.variables.read)",
+                "value": "project.variables.read"
+            },
+            {
+                "label": "Create and edit variables (project.variables.write)",
+                "value": "project.variables.write"
+            },
+            {
+                "label": "Read project Google Analytics data (project.ga.read)",
+                "value": "project.ga.read"
+            },
+            {
+                "label": "Edit products (project.products.write)",
+                "value": "project.products.write"
+            },
+            {
+                "label": "Read project statistics (project.stats.read)",
+                "value": "project.stats.read"
+            },
+            {
+                "label": "Read project tasks (project.tasks.read)",
+                "value": "project.tasks.read"
+            },
+            {
+                "label": "Create and edit project tasks (project.tasks.write)",
+                "value": "project.tasks.write"
+            },
+            {
+                "label": "Read feed audits (project.feedaudits.read)",
+                "value": "project.feedaudits.read"
+            },
+            {
+                "label": "Create and edit feed audits (project.feedaudits.write)",
+                "value": "project.feedaudits.write"
+            },
+            {
+                "label": "Read project extensions (project.apps.read)",
+                "value": "project.apps.read"
+            }
+        ]
+    }
+]
