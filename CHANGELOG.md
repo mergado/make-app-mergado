@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the project uses [semantic versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Added
+
+- Connection: all 36 scopes of the Mergado OAuth server in the scope list, and an Additional scopes field (advanced settings) that adds scopes to the default ones, for Make an API call.
+- Make an API call banner and the Docs tab explain how to add scopes.
+
 ## [0.2.0] - 2026-10-30
 
 Changes for the Make app review.
