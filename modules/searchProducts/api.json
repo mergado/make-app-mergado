@@ -19,6 +19,9 @@
         "qs": {
             "offset": "{{(pagination.page - 1) * 100}}"
         },
+        "body": {
+            "mql": "{{ifempty(parameters.mql, undefined)}}"
+        },
         "condition": "{{body.offset + body.limit < body.total_results}}"
     }
 }

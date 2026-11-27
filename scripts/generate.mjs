@@ -174,6 +174,9 @@ function buildModule(fn) {
         const page = fn.pagination.pageSize;
         api.pagination = {
             qs: { offset: `{{(pagination.page - 1) * ${page}}}` },
+            // Make sends the next pages without the request body unless pagination repeats it,
+            // and Mergado rejects a JSON POST with no body (400). Search products is the case.
+            ...(api.body && { body: api.body }),
             condition: `{{body.offset + body.limit < body.${fn.pagination.total}}}`,
         };
     }
