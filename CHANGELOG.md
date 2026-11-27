@@ -9,6 +9,10 @@ All notable changes to this project are documented here. The format follows [Kee
 - Connection: all 36 scopes of the Mergado OAuth server in the scope list, and an Additional scopes field (advanced settings) that adds scopes to the default ones, for Make an API call.
 - Make an API call banner and the Docs tab explain how to add scopes.
 
+### Fixed
+
+- Search products failed with "[400] The browser (or proxy) sent a request that this server could not understand" when the limit was above 100. Make sent the second and later pages without the request body, so the pagination now repeats it.
+
 ## [0.2.0] - 2026-10-30
 
 Changes for the Make app review.
